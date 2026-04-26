@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sổ Tay Công Thức Pro V3</title>
+    <style>
+        :root {
+            --neon-blue: #00f2ff;
+            --neon-pink: #ff00ea;
+            --neon-green: #00ff41;
+            --bg-deep: #050505;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 20px 10px;
+            padding-bottom: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 13px;
+            color: var(--neon-pink);
+            margin-bottom: 12px;
+            border-left: 3px solid var(--neon-pink);
+            padding-left: 8px;
+            text-transform: uppercase;
+        }
+
+        .x1-main-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--neon-blue);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .x2i-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            font-size: 10px;
+            color: var(--neon-blue);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        input, select, textarea {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            padding: 10px;
+            font-size: 15px;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input:focus { border-color: var(--neon-blue); }
+
+        .btn-add-x2i {
+            background: transparent;
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .btn-remove-x2i {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .main-btn {
+            height: 45px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 10px;
+        }
+
+        .btn-create { background: var(--neon-blue); color: #000; }
+        .btn-export { background: var(--neon-pink); color: #fff; }
+        .btn-reset { background: #444; color: #fff; }
+
+        #resultArea {
+            height: 250px;
+            color: var(--neon-green);
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin-top: 15px;
+            border-color: #444;
+        }
+
+        .flex-group { display: flex; gap: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 style="text-align: center; color: var(--neon-blue); margin-top: 0;">📔 Sổ tay nấu ăn V3</h2>
+
+        <div class="x1-main-box">
+            <div class="section-title">X1: Tên món ăn</div>
+            <input type="text" id="recipeName" placeholder="Tên món..." autocomplete="off">
+
+            <div class="section-title" style="margin-top: 15px;">Thành phần</div>
+            <div id="x2i-list">
+                </div>
+            <button class="btn-add-x2i" onclick="addX2i()">+ THÊM THÀNH PHẦN</button>
+        </div>
+
+        <div class="section-title">X2: Cách chế biến</div>
+        <textarea id="cookingSteps" style="height: 120px;" placeholder="Enter để nhảy số..."></textarea>
+
+        <div class="section-title">X3: Lưu ý</div>
+        <textarea id="notes" style="height: 60px;" placeholder="Ghi chú..."></textarea>
+
+        <div class="btn-grid">
+            <button class="main-btn btn-create" onclick="saveRecipe()">Lưu Sổ</button>
+            <button class="main-btn btn-export" onclick="exportTxt()">Xuất TXT</button>
+            <button class="main-btn btn-reset" onclick="resetForm()">Reset</button>
+        </div>
+
+        <textarea id="resultArea" placeholder="Dữ liệu lưu trữ..."></textarea>
+        <button class="main-btn" style="width:100%; margin-top:10px; background:#222; color:#666;" onclick="clearStorage()">Xóa sạch bộ nhớ</button>
+    </div>
+
+    <datalist id="list-ing">
+        <option value="Thịt bò">
+        <option value="Thịt heo">
+        <option value="Tôm tươi">
+        <option value="Tỏi băm">
+        <option value="Nước mắm">
+        <option value="Hạt nêm">
+        <option value="Đường">
+        <option value="Tiêu xay">
+    </datalist>
+
+    <script>
+        const x2iList = document.getElementById('x2i-list');
+        const area = document.getElementById('resultArea');
+        const stepsArea = document.getElementById('cookingSteps');
+
+        window.onload = () => {
+            const saved = localStorage.getItem('cookbook_v3_data');
+            if (saved) area.value = saved;
+            addX2i();
+            if (!stepsArea.value) stepsArea.value = "1. ";
+        };
+
+        function addX2i() {
+            const div = document.createElement('div');
+            div.className = 'x2i-box';
+            div.innerHTML = `
+                <button class="btn-remove-x2i" onclick="this.parentElement.remove()">✕</button>
+                <div style="margin-bottom: 8px;">
+                    <label>Tên thành phần</label>
+                    <input type="text" class="in-ing" list="list-ing" placeholder="Chọn hoặc nhập...">
+                </div>
+                <div class="flex-group">
+                    <div style="flex:2">
+                        <label>Định lượng</label>
+                        <input type="text" class="in-amt" placeholder="Số lượng...">
+                    </div>
+                    <div style="flex:1">
+                        <label>Đơn vị</label>
+                        <select class="in-unit">
+                            <option value="g">g</option>
+                            <option value="ml">ml</option>
+                            <option value="muỗng">muỗng</option>
+                            <option value="quả">quả</option>
+                            <option value="hộp">hộp</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            x2iList.appendChild(div);
+        }
+
+        // STT tự động cho X2
+        stepsArea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const lines = stepsArea.value.split('\n');
+                const lastLine = lines[lines.length - 1];
+                const match = lastLine.match(/^(\d+)\./);
+                let nextNum = match ? parseInt(match[1]) + 1 : 1;
+                stepsArea.value += "\n" + nextNum + ". ";
+                stepsArea.scrollTop = stepsArea.scrollHeight;
+            }
+        });
+
+        area.addEventListener('input', () => {
+            localStorage.setItem('cookbook_v3_data', area.value);
+        });
+
+        function saveRecipe() {
+            const name = document.getElementById('recipeName').value.trim();
+            if (!name) return alert("Chưa nhập tên món!");
+
+            let content = `🥘 MÓN: ${name.toUpperCase()}\n`;
+            content += `📍 THÀNH PHẦN:\n`;
+            
+            const items = document.querySelectorAll('.x2i-box');
+            items.forEach((item, index) => {
+                const ing = item.querySelector('.in-ing').value;
+                const amt = item.querySelector('.in-amt').value;
+                const unit = item.querySelector('.in-unit').value;
+                if(ing) content += `   ${index + 1}. ${ing}: ${amt}${unit}\n`;
+            });
+
+            content += `📝 CHẾ BIẾN:\n   ${stepsArea.value.replace(/\n/g, '\n   ')}\n`;
+            
+            const note = document.getElementById('notes').value.trim();
+            if(note) content += `💡 LƯU Ý: ${note}\n`;
+            content += `----------------------------------------\n`;
+
+            area.value += content;
+            localStorage.setItem('cookbook_v3_data', area.value);
+            resetForm();
+            area.scrollTop = area.scrollHeight;
+        }
+
+        function resetForm() {
+            document.getElementById('recipeName').value = '';
+            x2iList.innerHTML = '';
+            addX2i();
+            stepsArea.value = "1. ";
+            document.getElementById('notes').value = '';
+        }
+
+        function exportTxt() {
+            if (!area.value) return alert("Trống!");
+            const blob = new Blob([area.value], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `recipe_${Date.now()}.txt`;
+            a.click();
+        }
+
+        function clearStorage() {
+            if (confirm("Xóa toàn bộ dữ liệu vĩnh viễn?")) {
+                localStorage.removeItem('cookbook_v3_data');
+                area.value = '';
+            }
+        }
+    </script>
+</body>
+</html>
