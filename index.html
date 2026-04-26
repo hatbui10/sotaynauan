@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sổ Tay Công Thức Pro Max</title>
+    <title>Sổ Tay Nấu Ăn V11 - Sửa Lỗi Font</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
@@ -27,162 +27,74 @@
             border: 1px solid rgba(0, 242, 255, 0.3);
             border-radius: 12px;
             padding: 15px;
-            box-shadow: 0 0 25px rgba(0, 242, 255, 0.15);
         }
 
-        h2 {
-            text-align: center;
-            color: var(--neon-blue);
-            font-size: 20px;
-            margin: 0 0 20px 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px var(--neon-blue);
-        }
+        h2 { text-align: center; color: var(--neon-blue); text-transform: uppercase; margin: 0 0 20px 0; font-size: 18px; }
 
         .section-title {
-            font-size: 12px;
-            color: var(--neon-pink);
-            margin-bottom: 12px;
-            border-left: 3px solid var(--neon-pink);
-            padding-left: 8px;
-            text-transform: uppercase;
-            font-weight: bold;
-            display: block;
+            font-size: 11px; color: var(--neon-pink); margin-bottom: 12px;
+            border-left: 3px solid var(--neon-pink); padding-left: 8px;
+            text-transform: uppercase; font-weight: bold; display: block;
         }
 
-        .spacer-30 {
-            margin-top: 30px;
-        }
+        .spacer-30 { margin-top: 30px; }
 
         .x1-main-box {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 242, 255, 0.5);
-            border-radius: 10px;
-            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 242, 255, 0.4);
+            border-radius: 10px; padding: 15px;
         }
 
         .x2i-box {
             background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-            position: relative;
+            border: 1px solid #333; border-radius: 8px;
+            padding: 12px; margin-bottom: 12px; position: relative;
         }
 
-        label {
-            display: block;
-            font-size: 10px;
-            color: var(--neon-blue);
-            margin-bottom: 4px;
-            font-weight: bold;
+        label { display: block; font-size: 10px; color: var(--neon-blue); margin-bottom: 4px; font-weight: bold; }
+
+        input, textarea {
+            background: #000; border: 1px solid #444; border-radius: 6px;
+            color: #fff; padding: 12px; font-size: 16px; outline: none;
+            width: 100%; box-sizing: border-box;
         }
 
-        input, select, textarea {
-            background: #000;
-            border: 1px solid #444;
-            border-radius: 6px;
-            color: #fff;
-            padding: 12px;
-            font-size: 16px;
-            outline: none;
-            width: 100%;
-            box-sizing: border-box;
-            transition: 0.2s;
-        }
+        input:focus, textarea:focus { border-color: var(--neon-blue); }
 
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 8px rgba(0, 242, 255, 0.4);
-        }
+        .large-textarea { height: 200px; line-height: 1.6; }
 
         .btn-add-x2i {
-            background: transparent;
-            color: var(--neon-green);
-            border: 1px solid var(--neon-green);
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 5px;
-            text-transform: uppercase;
+            background: transparent; color: var(--neon-green); border: 1px solid var(--neon-green);
+            padding: 10px; border-radius: 6px; font-size: 12px; width: 100%; cursor: pointer;
         }
 
         .btn-remove-x2i {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #ff4444;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            font-weight: bold;
+            position: absolute; top: -5px; right: -5px;
+            background: #ff4444; color: white; border: none;
+            border-radius: 50%; width: 24px; height: 24px;
         }
 
-        .btn-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr 0.8fr;
-            gap: 8px;
-            margin-top: 20px;
-        }
-
-        .main-btn {
-            height: 48px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-size: 11px;
-        }
-
+        .btn-grid { display: grid; grid-template-columns: 1.2fr 1fr 0.8fr; gap: 8px; margin-top: 20px; }
+        .main-btn { height: 48px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 10px; }
         .btn-create { background: var(--neon-blue); color: #000; }
         .btn-export { background: var(--neon-pink); color: #fff; }
         .btn-reset { background: #333; color: #fff; }
 
-        #resultArea {
-            height: 280px;
-            color: var(--neon-green);
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            margin-top: 20px;
-            border: 1px solid #444;
-            line-height: 1.5;
-        }
-
+        #resultArea { height: 250px; color: var(--neon-green); font-family: monospace; margin-top: 20px; border: 1px solid #444; font-size: 12px; }
         .flex-group { display: flex; gap: 8px; }
-        
-        .clear-all {
-            width: 100%;
-            margin-top: 15px;
-            background: #1a1a1a;
-            color: #666;
-            height: 35px;
-            font-size: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>👨‍🍳 Sổ tay nấu ăn</h2>
+        <h2>👨‍🍳 KITCHEN DIARY V11</h2>
 
         <div class="x1-main-box">
-            <span class="section-title">X1: Thông tin món ăn</span>
-            <label>Tên món ăn / Nhóm</label>
-            <input type="text" id="recipeName" placeholder="Tên món ăn..." autocomplete="off">
+            <span class="section-title">X1: Tên món ăn</span>
+            <input type="text" id="recipeName" placeholder="Tên món...">
 
             <div style="margin-top: 20px;">
-                <span class="section-title">Thành phần chi tiết (X2i)</span>
+                <span class="section-title">Thành phần (X2i)</span>
                 <div id="x2i-list"></div>
                 <button class="btn-add-x2i" onclick="addX2i()">+ THÊM NGUYÊN LIỆU</button>
             </div>
@@ -190,24 +102,34 @@
 
         <div class="spacer-30">
             <span class="section-title">X2: Cách chế biến</span>
-            <textarea id="cookingSteps" style="height: 140px;" placeholder="Ấn Enter để nhảy số..."></textarea>
+            <textarea id="cookingSteps" class="large-textarea" placeholder="Nhảy số tự động..."></textarea>
         </div>
 
         <div class="spacer-30">
-            <span class="section-title">X3: Lưu ý & Mẹo nhỏ</span>
-            <textarea id="notes" style="height: 100px;" placeholder="Ấn Enter để nhảy số..."></textarea>
+            <span class="section-title">X3: Lưu ý</span>
+            <textarea id="notes" class="large-textarea" placeholder="Nhảy số tự động..."></textarea>
         </div>
 
         <div class="btn-grid">
             <button class="main-btn btn-create" onclick="saveRecipe()">Lưu Sổ</button>
-            <button class="main-btn btn-export" onclick="exportTxt()">Xuất TXT</button>
+            <button class="main-btn btn-export" onclick="exportTxt()">Xuất TXT (Sửa Font)</button>
             <button class="main-btn btn-reset" onclick="resetForm()">Reset</button>
         </div>
 
         <textarea id="resultArea" placeholder="Dữ liệu tổng hợp..."></textarea>
-        
-        <button class="clear-all" onclick="clearStorage()">XÓA SẠCH BỘ NHỚ LƯU TRỮ</button>
     </div>
+
+    <datalist id="list-ing">
+        <option value="Thịt bò"> <option value="Thịt heo"> <option value="Tôm"> <option value="Hành lá"> <option value="Tỏi băm"> <option value="Nước mắm"> <option value="Đường">
+    </datalist>
+
+    <datalist id="list-unit">
+        <option value="g"> <option value="kg"> <option value="ml"> <option value="muỗng cafe"> <option value="muỗng canh"> <option value="quả"> <option value="củ">
+    </datalist>
+
+    <datalist id="list-numbers">
+        <option value="1"> <option value="2"> <option value="5"> <option value="10"> <option value="20"> <option value="50"> <option value="100"> <option value="200"> <option value="300"> <option value="500">
+    </datalist>
 
     <script>
         const x2iList = document.getElementById('x2i-list');
@@ -216,11 +138,11 @@
         const notesArea = document.getElementById('notes');
 
         window.onload = () => {
-            const saved = localStorage.getItem('cook_pro_v5');
+            const saved = localStorage.getItem('cook_pro_v11');
             if (saved) area.value = saved;
             addX2i();
-            if (!stepsArea.value) stepsArea.value = "1. ";
-            if (!notesArea.value) notesArea.value = "1. ";
+            stepsArea.value = "1. ";
+            notesArea.value = "1. ";
         };
 
         function addX2i() {
@@ -230,88 +152,54 @@
                 <button class="btn-remove-x2i" onclick="this.parentElement.remove()">✕</button>
                 <div style="margin-bottom: 8px;">
                     <label>Tên thành phần</label>
-                    <input type="text" class="in-ing" placeholder="Tên nguyên liệu...">
+                    <input type="text" class="in-ing" list="list-ing" placeholder="Tên...">
                 </div>
                 <div class="flex-group">
-                    <div style="flex:1.2">
-                        <label>Số lượng</label>
-                        <input type="text" class="in-amt" placeholder="VD: 500">
+                    <div style="flex:1">
+                        <label>Định lượng</label>
+                        <input type="text" class="in-amt" list="list-numbers" inputmode="decimal" placeholder="Số...">
                     </div>
-                    <div style="flex:2">
+                    <div style="flex:1">
                         <label>Đơn vị</label>
-                        <select class="in-unit">
-                            <option value="g">g (Gram)</option>
-                            <option value="kg">kg</option>
-                            <option value="ml">ml</option>
-                            <option value="Lít">Lít</option>
-                            <option value="muỗng cafe">Muỗng cafe</option>
-                            <option value="muỗng canh">Muỗng canh</option>
-                            <option value="thìa">Thìa</option>
-                            <option value="bát">Bát/Chén</option>
-                            <option value="quả">Quả/Trái</option>
-                            <option value="củ">Củ</option>
-                            <option value="nhánh">Nhánh</option>
-                            <option value="lát">Lát</option>
-                            <option value="gói">Gói</option>
-                            <option value="hộp">Hộp</option>
-                        </select>
+                        <input type="text" class="in-unit" list="list-unit" placeholder="g, ml...">
                     </div>
                 </div>
             `;
             x2iList.appendChild(div);
         }
 
-        // Hàm xử lý tự động nhảy số chung cho nhiều textarea
-        function setupAutoNumber(element) {
-            element.addEventListener('keydown', (e) => {
+        function setupAutoNumber(el) {
+            el.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    const lines = element.value.split('\n');
+                    const lines = el.value.split('\n');
                     const lastLine = lines[lines.length - 1];
                     const match = lastLine.match(/^(\d+)\./);
                     let nextNum = match ? parseInt(match[1]) + 1 : 1;
-                    element.value += "\n" + nextNum + ". ";
-                    element.scrollTop = element.scrollHeight;
+                    el.value += "\n" + nextNum + ". ";
+                    el.scrollTop = el.scrollHeight;
                 }
             });
         }
 
-        // Áp dụng cho cả X2 và X3
         setupAutoNumber(stepsArea);
         setupAutoNumber(notesArea);
 
-        area.addEventListener('input', () => {
-            localStorage.setItem('cook_pro_v5', area.value);
-        });
-
         function saveRecipe() {
             const name = document.getElementById('recipeName').value.trim();
-            if (!name) return alert("Vui lòng nhập tên món ăn!");
-
-            let content = `🥘 MÓN: ${name.toUpperCase()}\n`;
-            content += `📍 THÀNH PHẦN:\n`;
-            
-            const items = document.querySelectorAll('.x2i-box');
-            let hasData = false;
-            items.forEach((item, index) => {
-                const ing = item.querySelector('.in-ing').value.trim();
-                const amt = item.querySelector('.in-amt').value.trim();
+            if (!name) return alert("Nhập tên món!");
+            let content = `🥘 MÓN: ${name.toUpperCase()}\n📍 THÀNH PHẦN:\n`;
+            document.querySelectorAll('.x2i-box').forEach((item, index) => {
+                const ing = item.querySelector('.in-ing').value;
+                const amt = item.querySelector('.in-amt').value;
                 const unit = item.querySelector('.in-unit').value;
-                if(ing) {
-                    content += `   ${index + 1}. ${ing}: ${amt} ${unit}\n`;
-                    hasData = true;
-                }
+                if(ing) content += `   ${index + 1}. ${ing}: ${amt}${unit}\n`;
             });
-
-            if(!hasData) return alert("Cần nhập nguyên liệu!");
-
             content += `📝 CHẾ BIẾN:\n   ${stepsArea.value.replace(/\n/g, '\n   ')}\n`;
             content += `💡 LƯU Ý:\n   ${notesArea.value.replace(/\n/g, '\n   ')}\n`;
             content += `----------------------------------------\n\n`;
-
             area.value += content;
-            localStorage.setItem('cook_pro_v5', area.value);
-            area.scrollTop = area.scrollHeight;
+            localStorage.setItem('cook_pro_v11', area.value);
             resetForm();
         }
 
@@ -323,20 +211,23 @@
             notesArea.value = "1. ";
         }
 
+        // HÀM XUẤT FILE ĐÃ SỬA LỖI FONT
         function exportTxt() {
-            if (!area.value) return alert("Trống!");
-            const blob = new Blob([area.value], { type: 'text/plain' });
+            if (!area.value) return alert("Chưa có nội dung để xuất!");
+            
+            // Bước 1: Thêm BOM (Byte Order Mark) để ép Windows/Notepad nhận diện UTF-8
+            const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+            const content = area.value;
+            
+            // Bước 2: Tạo Blob kết hợp BOM và nội dung
+            const blob = new Blob([bom, content], { type: 'text/plain;charset=utf-8' });
+            
+            // Bước 3: Tải file
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `CookBook_${new Date().getTime()}.txt`;
+            a.download = `CookBook_${new Date().toLocaleDateString('vi-VN')}.txt`;
             a.click();
-        }
-
-        function clearStorage() {
-            if (confirm("Xóa vĩnh viễn dữ liệu đã lưu?")) {
-                localStorage.removeItem('cook_pro_v5');
-                area.value = '';
-            }
+            URL.revokeObjectURL(a.href);
         }
     </script>
 </body>
