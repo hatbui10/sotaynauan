@@ -193,7 +193,7 @@
                 const ing = item.querySelector('.in-ing').value;
                 const amt = item.querySelector('.in-amt').value;
                 const unit = item.querySelector('.in-unit').value;
-                if(ing) content += `   ${index + 1}. ${ing}: ${amt}${unit}\n`;
+                if(ing) content += `   ${index + 1}. ${ing}: ${amt}  ${unit}\n`;
             });
             content += `📝 CHẾ BIẾN:\n   ${stepsArea.value.replace(/\n/g, '\n   ')}\n`;
             content += `💡 LƯU Ý:\n   ${notesArea.value.replace(/\n/g, '\n   ')}\n`;
