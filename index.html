@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sổ Tay Nấu Ăn V12 - No Overflow</title>
+    <title>Sổ Tay Nấu Ăn V16</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
@@ -63,51 +63,39 @@
         .btn-export { background: var(--neon-pink); color: #fff; }
         .btn-reset { background: #333; color: #fff; }
 
-        /* --- FIX TRÀN BẢNG --- */
-        #finalResult {
-            margin-top: 15px;
-            border: 1px solid rgba(0, 255, 65, 0.2);
-            padding: 8px;
-            border-radius: 8px;
-            background: #000;
-        }
-
-        .result-item { margin-bottom: 25px; border-bottom: 1px dashed #333; padding-bottom: 15px; }
-
+        /* BẢNG KẾT QUẢ */
+        #htmlPreview { margin-top: 15px; padding: 8px; border-radius: 8px; background: #000; border: 1px solid rgba(0, 255, 65, 0.2); }
+        
         .recipe-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 11px;
             margin: 10px 0;
             color: var(--neon-green);
-            table-layout: fixed; /* Cố định chiều rộng bảng */
+            table-layout: fixed;
         }
 
         .recipe-table th, .recipe-table td {
             border: 1px solid #333;
-            padding: 5px;
+            padding: 6px;
+            word-wrap: break-word;
+            outline: none;
             text-align: left;
-            word-wrap: break-word; /* Tự động xuống dòng */
-            overflow-wrap: break-word;
             vertical-align: top;
         }
 
-        /* Định nghĩa % cột để không bị lấn át nhau */
-        .col-stt { width: 12%; }
-        .col-ten { width: 35%; }
-        .col-sl { width: 15%; }
-        .col-dv { width: 13%; }
-        .col-tt { width: 25%; }
-
+        .recipe-table td:focus { background: rgba(0, 255, 65, 0.05); }
         .recipe-table th { background: rgba(0, 242, 255, 0.1); color: var(--neon-blue); }
-        .text-output { font-size: 13px; white-space: pre-wrap; margin-top: 8px; color: #eee; }
+        
         .flex-group { display: flex; gap: 6px; margin-top: 8px; }
+        .editable-text { white-space: pre-wrap; outline: none; padding: 5px; border-radius: 4px; margin-top: 5px; }
+        .editable-text:focus { background: rgba(255, 0, 234, 0.05); }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>👨‍🍳 KITCHEN DIARY V12</h2>
+        <h2>👨‍🍳 KITCHEN DIARY V16</h2>
 
         <div class="x1-main-box">
             <span class="section-title">X1: Tên món ăn</span>
@@ -122,7 +110,7 @@
 
         <div style="margin-top:20px">
             <span class="section-title">X2: Cách chế biến</span>
-            <textarea id="cookingSteps" style="height:120px" placeholder="1. Bước 1..."></textarea>
+            <textarea id="cookingSteps" style="height:100px" placeholder="1. Bước 1..."></textarea>
         </div>
 
         <div style="margin-top:20px">
@@ -136,20 +124,22 @@
             <button class="main-btn btn-reset" onclick="resetForm()">Reset</button>
         </div>
 
-        <span class="section-title">Danh sách món đã lưu</span>
-        <div id="finalResult"></div>
+        <span class="section-title">Danh sách món đã lưu (Bấm vào để sửa)</span>
+        <div id="htmlPreview"></div>
     </div>
 
     <script>
         const x2iList = document.getElementById('x2i-list');
-        const finalResult = document.getElementById('finalResult');
-        let allRecipes = JSON.parse(localStorage.getItem('my_recipes_v12_fixed')) || [];
+        const preview = document.getElementById('htmlPreview');
+        const stepsArea = document.getElementById('cookingSteps');
+        const notesArea = document.getElementById('notes');
 
         window.onload = () => {
-            renderRecipes();
-            if(x2iList.children.length === 0) addX2i();
-            document.getElementById('cookingSteps').value = "1. ";
-            document.getElementById('notes').value = "1. ";
+            const savedHtml = localStorage.getItem('cook_html_v16');
+            if (savedHtml) preview.innerHTML = savedHtml;
+            addX2i();
+            stepsArea.value = "1. ";
+            notesArea.value = "1. ";
         };
 
         function addX2i() {
@@ -168,86 +158,92 @@
             x2iList.appendChild(div);
         }
 
+        function setupAutoNumber(el) {
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const lines = el.value.split('\n');
+                    const lastLine = lines[lines.length - 1];
+                    const match = lastLine.match(/^(\d+)\./);
+                    let nextNum = match ? parseInt(match[1]) + 1 : 1;
+                    el.value += "\n" + nextNum + ". ";
+                    el.scrollTop = el.scrollHeight;
+                }
+            });
+        }
+        setupAutoNumber(stepsArea);
+        setupAutoNumber(notesArea);
+
         function saveRecipe() {
             const name = document.getElementById('recipeName').value.trim();
             if (!name) return alert("Nhập tên món!");
 
-            const ingredients = [];
+            let tableHtml = `<div class="recipe-entry">
+                <strong contenteditable="true" style="color:var(--neon-blue); display:block; margin:10px 0;">🥘 MÓN: ${name.toUpperCase()}</strong>
+                <table class="recipe-table">
+                    <thead><tr><th style="width:10%">#</th><th style="width:35%">Tên</th><th style="width:15%">SL</th><th style="width:15%">ĐV</th><th style="width:25%">T.Thái</th></tr></thead>
+                    <tbody>`;
+
             document.querySelectorAll('.x2i-box').forEach((item, index) => {
-                const ing = item.querySelector('.in-ing').value;
-                if(ing) {
-                    ingredients.push({
-                        stt: index + 1,
-                        name: ing,
-                        amt: item.querySelector('.in-amt').value,
-                        unit: item.querySelector('.in-unit').value,
-                        status: item.querySelector('.in-status').value
-                    });
-                }
+                const ing = item.querySelector('.in-ing').value || "-";
+                const amt = item.querySelector('.in-amt').value || "-";
+                const unit = item.querySelector('.in-unit').value || "-";
+                const stat = item.querySelector('.in-status').value || "-";
+
+                tableHtml += `<tr>
+                    <td contenteditable="true">${index+1}</td>
+                    <td contenteditable="true">${ing}</td>
+                    <td contenteditable="true">${amt}</td>
+                    <td contenteditable="true">${unit}</td>
+                    <td contenteditable="true">${stat}</td>
+                </tr>`;
             });
 
-            const recipe = {
-                id: Date.now(),
-                name: name.toUpperCase(),
-                ingredients: ingredients,
-                steps: document.getElementById('cookingSteps').value,
-                notes: document.getElementById('notes').value
-            };
+            tableHtml += `</tbody></table>
+                <div contenteditable="true" class="editable-text" style="color:var(--neon-pink); font-size:12px;">📝 CHẾ BIẾN:\n${stepsArea.value}</div>
+                <div contenteditable="true" class="editable-text" style="color:#aaa; font-size:12px; margin-bottom:10px;">💡 LƯU Ý:\n${notesArea.value}</div>
+                <hr style="border:0; border-top:1px dashed #333; margin:15px 0;">
+            </div>`;
 
-            allRecipes.unshift(recipe);
-            localStorage.setItem('my_recipes_v12_fixed', JSON.stringify(allRecipes));
-            renderRecipes();
+            // Chèn lên đầu
+            preview.innerHTML = tableHtml + preview.innerHTML;
+            
+            // Lưu trạng thái HTML vào máy
+            localStorage.setItem('cook_html_v16', preview.innerHTML);
             resetForm();
         }
 
-        function renderRecipes() {
-            finalResult.innerHTML = '';
-            allRecipes.forEach(r => {
-                let tableRows = r.ingredients.map(i => 
-                    `<tr><td>${i.stt}</td><td>${i.name}</td><td>${i.amt}</td><td>${i.unit}</td><td>${i.status}</td></tr>`
-                ).join('');
-
-                const html = `
-                    <div class="result-item">
-                        <strong style="color:var(--neon-blue); display:block; margin-bottom:8px;">🥘 MÓN: ${r.name}</strong>
-                        <table class="recipe-table">
-                            <colgroup>
-                                <col class="col-stt">
-                                <col class="col-ten">
-                                <col class="col-sl">
-                                <col class="col-dv">
-                                <col class="col-tt">
-                            </colgroup>
-                            <tr><th>#</th><th>Tên</th><th>SL</th><th>ĐV</th><th>Tr.Thái</th></tr>
-                            ${tableRows}
-                        </table>
-                        <div class="text-output"><span style="color:var(--neon-pink); font-weight:bold;">📝 CHẾ BIẾN:</span>\n${r.steps}</div>
-                        <div class="text-output"><span style="color:var(--neon-pink); font-weight:bold;">💡 LƯU Ý:</span>\n${r.notes}</div>
-                    </div>
-                `;
-                finalResult.innerHTML += html;
-            });
-        }
+        // Tự động lưu khi bạn sửa trực tiếp vào bảng
+        preview.addEventListener('input', () => {
+            localStorage.setItem('cook_html_v16', preview.innerHTML);
+        });
 
         function resetForm() {
             document.getElementById('recipeName').value = '';
             x2iList.innerHTML = '';
             addX2i();
-            document.getElementById('cookingSteps').value = "1. ";
-            document.getElementById('notes').value = "1. ";
+            stepsArea.value = "1. ";
+            notesArea.value = "1. ";
         }
 
         function exportTxt() {
-            if (allRecipes.length === 0) return alert("Chưa có dữ liệu!");
+            // Lấy dữ liệu thuần túy từ bảng để xuất TXT
             let txt = "SỔ TAY NẤU ĂN\n\n";
-            allRecipes.forEach(r => {
-                txt += `🥘 MÓN: ${r.name}\nTHÀNH PHẦN:\nSTT | Tên | SL | ĐV | Trạng thái\n`;
-                r.ingredients.forEach(i => {
-                    txt += `${i.stt} | ${i.name} | ${i.amt} | ${i.unit} | ${i.status}\n`;
+            const entries = document.querySelectorAll('.recipe-entry');
+            entries.forEach(entry => {
+                const name = entry.querySelector('strong').innerText;
+                txt += name + "\n";
+                const rows = entry.querySelectorAll('table tr');
+                rows.forEach((row, i) => {
+                    const cells = row.querySelectorAll('th, td');
+                    let rowData = Array.from(cells).map(c => c.innerText).join(" | ");
+                    txt += rowData + "\n";
                 });
-                txt += `\nCHẾ BIẾN:\n${r.steps}\nLƯU Ý:\n${r.notes}\n`;
-                txt += `-----------------------------------\n\n`;
+                const texts = entry.querySelectorAll('.editable-text');
+                texts.forEach(t => txt += t.innerText + "\n");
+                txt += "-------------------\n\n";
             });
+            
             const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
             const blob = new Blob([bom, txt], { type: 'text/plain;charset=utf-8' });
             const a = document.createElement('a');
