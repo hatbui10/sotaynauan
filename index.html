@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sổ Tay Nấu Ăn V17 - Bảo Mật</title>
+    <title>Sổ Tay Nấu Ăn V17 - Pro Edit</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
@@ -13,20 +13,16 @@
         }
 
         body {
-            background-color: var(--bg-deep);
-            color: #fff;
+            background-color: var(--bg-deep); color: #fff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 15px 10px;
-            padding-bottom: 40px;
+            margin: 15px 10px; padding-bottom: 40px;
         }
 
         .container {
-            max-width: 500px;
-            margin: auto;
+            max-width: 500px; margin: auto;
             background: rgba(20, 20, 20, 0.95);
             border: 1px solid rgba(0, 242, 255, 0.3);
-            border-radius: 12px;
-            padding: 12px;
+            border-radius: 12px; padding: 12px;
         }
 
         h2 { text-align: center; color: var(--neon-blue); text-transform: uppercase; margin: 10px 0; font-size: 18px; }
@@ -44,17 +40,13 @@
         }
 
         .x2i-box {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #333; border-radius: 8px;
-            padding: 10px; margin-bottom: 12px; position: relative;
+            background: rgba(0, 0, 0, 0.6); border: 1px solid #333; 
+            border-radius: 8px; padding: 10px; margin-bottom: 12px; position: relative;
         }
-
-        label { display: block; font-size: 10px; color: var(--neon-blue); margin-bottom: 4px; font-weight: bold; }
 
         input, textarea {
             background: #000; border: 1px solid #444; border-radius: 6px;
-            color: #fff; padding: 10px; font-size: 15px; outline: none;
-            width: 100%; box-sizing: border-box;
+            color: #fff; padding: 10px; font-size: 15px; outline: none; width: 100%; box-sizing: border-box;
         }
 
         .btn-grid { display: grid; grid-template-columns: 1.2fr 1fr 0.8fr; gap: 8px; margin: 20px 0; }
@@ -66,53 +58,41 @@
         /* BẢNG KẾT QUẢ */
         #htmlPreview { margin-top: 15px; padding: 8px; border-radius: 8px; background: #000; border: 1px solid rgba(0, 255, 65, 0.2); }
         
+        .recipe-entry { position: relative; }
+        
+        /* Nút xóa món ăn */
+        .del-recipe-btn {
+            position: absolute; right: 0; top: 0; background: #ff4444; color: white;
+            border: none; border-radius: 4px; padding: 2px 8px; font-size: 10px;
+            cursor: pointer; display: none; z-index: 10;
+        }
+        .unlocked .del-recipe-btn { display: block; }
+
         .recipe-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 11px;
-            margin: 10px 0;
-            color: var(--neon-green);
-            table-layout: fixed;
+            width: 100%; border-collapse: collapse; font-size: 11px;
+            margin: 10px 0; color: var(--neon-green); table-layout: fixed;
         }
 
         .recipe-table th, .recipe-table td {
-            border: 1px solid #333;
-            padding: 6px;
-            word-wrap: break-word;
-            outline: none;
-            text-align: left;
-            vertical-align: top;
+            border: 1px solid #333; padding: 6px; word-wrap: break-word; outline: none; text-align: left;
         }
 
-        /* Hiệu ứng khi được phép sửa */
-        .unlocked .recipe-table td:focus { background: rgba(0, 255, 65, 0.1); border: 1px solid var(--neon-green); }
         .recipe-table th { background: rgba(0, 242, 255, 0.1); color: var(--neon-blue); }
-        
+        .unlocked td:focus { background: rgba(0, 255, 65, 0.1); border: 1px solid var(--neon-green); }
+
         .flex-group { display: flex; gap: 6px; margin-top: 8px; }
         .editable-text { white-space: pre-wrap; outline: none; padding: 5px; border-radius: 4px; margin-top: 5px; }
-        .unlocked .editable-text:focus { background: rgba(255, 0, 234, 0.05); }
 
-        /* Nút khóa */
-        .lock-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-        }
+        .lock-container { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
         .lock-btn {
-            background: transparent;
-            border: 1px solid orange;
-            color: orange;
-            padding: 5px 12px;
-            border-radius: 4px;
-            font-size: 10px;
-            cursor: pointer;
-            text-transform: uppercase;
+            background: transparent; border: 1px solid orange; color: orange;
+            padding: 5px 12px; border-radius: 4px; font-size: 10px; cursor: pointer;
         }
-        .unlocked-state {
-            border-color: var(--neon-green);
-            color: var(--neon-green);
-        }
+        .unlocked-state { border-color: var(--neon-green); color: var(--neon-green); }
+
+        /* HD Sửa hàng */
+        .edit-hint { font-size: 9px; color: #666; margin-top: 5px; display: none; }
+        .unlocked .edit-hint { display: block; }
     </style>
 </head>
 <body>
@@ -122,9 +102,7 @@
 
         <datalist id="unit-suggestions">
             <option value="gam"> <option value="ml"> <option value="miếng"> <option value="chiếc">
-            <option value="bóp"> <option value="gắp"> <option value="nhúm nhỏ"> <option value="nắm">
-            <option value="thìa canh đầy"> <option value="thìa cafe đầy"> <option value="bát"> <option value="tô">
-            <option value="quả"> <option value="củ"> <option value="nhánh"> <option value="lát">
+            <option value="thìa canh"> <option value="thìa cafe"> <option value="bát"> <option value="quả">
         </datalist>
 
         <div class="x1-main-box">
@@ -144,7 +122,7 @@
         </div>
 
         <div style="margin-top:20px">
-            <span class="section-title">X3: Yêu cầu kỹ thuật cần đạt</span>
+            <span class="section-title">X3: Lưu ý</span>
             <textarea id="notes" style="height:80px" placeholder="1. Lưu ý..."></textarea>
         </div>
 
@@ -155,53 +133,48 @@
         </div>
 
         <div class="lock-container">
-            <span class="section-title">Danh sách món đã lưu</span>
+            <span class="section-title">Dữ liệu đã lưu</span>
             <button class="lock-btn" id="btnToggleLock" onclick="toggleSecurity()">🔓 Mở khóa sửa</button>
         </div>
+        <p class="edit-hint">* Mẹo: Mở khóa -> Chuột phải vào ô để Thêm/Xóa hàng. Bấm X để xóa món.</p>
         
         <div id="htmlPreview"></div>
     </div>
 
     <script>
-        const PASS_CODE = "4321"; // <-- ĐỔI MẬT KHẨU CỦA BẠN TẠI ĐÂY
+        const PASS_CODE = "4321"; 
         let isUnlocked = false;
 
         const x2iList = document.getElementById('x2i-list');
         const preview = document.getElementById('htmlPreview');
-        const stepsArea = document.getElementById('cookingSteps');
-        const notesArea = document.getElementById('notes');
 
         window.onload = () => {
             const savedHtml = localStorage.getItem('cook_html_v17');
             if (savedHtml) preview.innerHTML = savedHtml;
             addX2i();
-            stepsArea.value = "1. ";
-            notesArea.value = "1. ";
-            applyLockStatus(); // Luôn khóa khi tải trang
+            document.getElementById('cookingSteps').value = "1. ";
+            document.getElementById('notes').value = "1. ";
+            applyLockStatus();
         };
 
-        // Hàm bảo mật
         function toggleSecurity() {
             if (!isUnlocked) {
                 let input = prompt("Nhập mật khẩu để chỉnh sửa:");
                 if (input === PASS_CODE) {
                     isUnlocked = true;
                     applyLockStatus();
-                } else {
-                    alert("Sai mật khẩu!");
-                }
+                } else { alert("Sai mật khẩu!"); }
             } else {
                 isUnlocked = false;
                 applyLockStatus();
-                localStorage.setItem('cook_html_v17', preview.innerHTML); // Lưu lại khi khóa
-                alert("Đã khóa và lưu dữ liệu!");
+                localStorage.setItem('cook_html_v17', preview.innerHTML);
+                alert("Đã khóa và lưu!");
             }
         }
 
         function applyLockStatus() {
             const btn = document.getElementById('btnToggleLock');
             const editables = preview.querySelectorAll('[contenteditable]');
-            
             if (isUnlocked) {
                 btn.innerText = "🔒 Khóa & Lưu";
                 btn.classList.add('unlocked-state');
@@ -218,113 +191,76 @@
         function addX2i() {
             const div = document.createElement('div');
             div.className = 'x2i-box';
-            div.innerHTML = `
-                <button onclick="this.parentElement.remove()" style="position:absolute; right:5px; top:5px; background:#ff4444; border:none; color:white; border-radius:50%; width:20px; height:20px; cursor:pointer">✕</button>
-                <label>Tên thành phần</label>
+            div.innerHTML = `<button onclick="this.parentElement.remove()" style="position:absolute; right:5px; top:5px; background:#ff4444; border:none; color:white; border-radius:50%; width:20px; height:20px; cursor:pointer">✕</button>
                 <input type="text" class="in-ing" placeholder="Tên...">
-                <div class="flex-group">
-                    <input type="text" class="in-amt" placeholder="SL" style="flex:1">
-                    <input type="text" class="in-unit" list="unit-suggestions" placeholder="ĐV" style="flex:1">
-                    <input type="text" class="in-status" placeholder="Trạng thái" style="flex:1.5">
-                </div>
-            `;
+                <div class="flex-group"><input type="text" class="in-amt" placeholder="SL" style="flex:1"><input type="text" class="in-unit" list="unit-suggestions" placeholder="ĐV" style="flex:1"><input type="text" class="in-status" placeholder="Trạng thái" style="flex:1.5"></div>`;
             x2iList.appendChild(div);
         }
-
-        function setupAutoNumber(el) {
-            el.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const lines = el.value.split('\n');
-                    const lastLine = lines[lines.length - 1];
-                    const match = lastLine.match(/^(\d+)\./);
-                    let nextNum = match ? parseInt(match[1]) + 1 : 1;
-                    el.value += "\n" + nextNum + ". ";
-                    el.scrollTop = el.scrollHeight;
-                }
-            });
-        }
-        setupAutoNumber(stepsArea);
-        setupAutoNumber(notesArea);
 
         function saveRecipe() {
             const name = document.getElementById('recipeName').value.trim();
             if (!name) return alert("Nhập tên món!");
 
-            let tableHtml = `<div class="recipe-entry">
-                <strong style="color:var(--neon-blue); display:block; margin:10px 0;">🥘 MÓN: ${name.toUpperCase()}</strong>
-                <table class="recipe-table">
-                    <thead><tr><th style="width:10%">#</th><th style="width:35%">Tên</th><th style="width:15%">SL</th><th style="width:15%">ĐV</th><th style="width:25%">T.Thái</th></tr></thead>
-                    <tbody>`;
-
+            let tableRows = "";
             document.querySelectorAll('.x2i-box').forEach((item, index) => {
-                const ing = item.querySelector('.in-ing').value || "-";
-                const amt = item.querySelector('.in-amt').value || "-";
-                const unit = item.querySelector('.in-unit').value || "-";
-                const stat = item.querySelector('.in-status').value || "-";
-                tableHtml += `<tr>
-                    <td>${index+1}</td>
-                    <td>${ing}</td>
-                    <td>${amt}</td>
-                    <td>${unit}</td>
-                    <td>${stat}</td>
-                </tr>`;
+                tableRows += `<tr><td class="stt">${index+1}</td><td contenteditable="false">${item.querySelector('.in-ing').value || "-"}</td><td contenteditable="false">${item.querySelector('.in-amt').value || "-"}</td><td contenteditable="false">${item.querySelector('.in-unit').value || "-"}</td><td contenteditable="false">${item.querySelector('.in-status').value || "-"}</td></tr>`;
             });
 
-            tableHtml += `</tbody></table>
-                <div class="editable-text" style="color:var(--neon-pink); font-size:12px;">📝 CHẾ BIẾN:\n${stepsArea.value}</div>
-                <div class="editable-text" style="color:#aaa; font-size:12px; margin-bottom:10px;">💡 LƯU Ý:\n${notesArea.value}</div>
-                <hr style="border:0; border-top:1px dashed #333; margin:15px 0;">
-            </div>`;
+            const entryHtml = `<div class="recipe-entry">
+                <button class="del-recipe-btn" onclick="if(confirm('Xóa món này?')) {this.parentElement.remove(); saveToLocal();}">XÓA MÓN</button>
+                <strong contenteditable="false" style="color:var(--neon-blue); display:block; margin:10px 0;">🥘 MÓN: ${name.toUpperCase()}</strong>
+                <table class="recipe-table"><thead><tr><th style="width:10%">#</th><th style="width:35%">Tên</th><th style="width:15%">SL</th><th style="width:15%">ĐV</th><th style="width:25%">T.Thái</th></tr></thead>
+                <tbody>${tableRows}</tbody></table>
+                <div class="editable-text" contenteditable="false" style="color:var(--neon-pink); font-size:12px;">📝 CHẾ BIẾN:\n${document.getElementById('cookingSteps').value}</div>
+                <div class="editable-text" contenteditable="false" style="color:#aaa; font-size:12px; margin-bottom:10px;">💡 LƯU Ý:\n${document.getElementById('notes').value}</div><hr style="border:0; border-top:1px dashed #333; margin:15px 0;"></div>`;
 
-            // Chèn vào đầu danh sách
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = tableHtml;
-            const newEntry = tempDiv.firstChild;
-            
-            // Gán thuộc tính contenteditable cho các thành phần trong entry mới
-            newEntry.querySelector('strong').setAttribute('contenteditable', isUnlocked ? "true" : "false");
-            newEntry.querySelectorAll('td').forEach(td => td.setAttribute('contenteditable', isUnlocked ? "true" : "false"));
-            newEntry.querySelectorAll('.editable-text').forEach(div => div.setAttribute('contenteditable', isUnlocked ? "true" : "false"));
-
-            preview.insertBefore(newEntry, preview.firstChild);
-            localStorage.setItem('cook_html_v17', preview.innerHTML);
+            preview.insertAdjacentHTML('afterbegin', entryHtml);
+            saveToLocal();
             resetForm();
+            if(isUnlocked) applyLockStatus();
         }
 
-        // Tự động lưu khi sửa (chỉ khi đang mở khóa)
-        preview.addEventListener('input', () => {
-            if (isUnlocked) {
-                localStorage.setItem('cook_html_v17', preview.innerHTML);
+        // Xử lý Click Chuột phải để Thêm/Xóa hàng
+        preview.addEventListener('contextmenu', function(e) {
+            if (!isUnlocked) return;
+            const cell = e.target.closest('td');
+            if (!cell) return;
+            e.preventDefault();
+
+            const row = cell.parentElement;
+            const tbody = row.parentElement;
+            const action = confirm("Bấm OK để THÊM hàng mới bên dưới\nBấm CANCEL để XÓA hàng này");
+
+            if (action) {
+                const newRow = row.cloneNode(true);
+                newRow.querySelectorAll('td').forEach((td, idx) => { if(idx > 0) td.innerText = "-"; });
+                row.after(newRow);
+            } else {
+                if (tbody.rows.length > 1) row.remove();
+                else alert("Không thể xóa hàng cuối cùng!");
             }
+            
+            // Đánh lại số thứ tự
+            Array.from(tbody.rows).forEach((r, i) => { r.cells[0].innerText = i + 1; });
+            saveToLocal();
         });
 
+        function saveToLocal() { localStorage.setItem('cook_html_v17', preview.innerHTML); }
+        
         function resetForm() {
-            document.getElementById('recipeName').value = '';
-            x2iList.innerHTML = '';
-            addX2i();
-            stepsArea.value = "1. ";
-            notesArea.value = "1. ";
+            document.getElementById('recipeName').value = ''; x2iList.innerHTML = ''; addX2i();
+            document.getElementById('cookingSteps').value = "1. "; document.getElementById('notes').value = "1. ";
         }
 
         function exportTxt() {
-            let txt = "SỔ TAY NẤU ĂN\n\n";
-            const entries = document.querySelectorAll('.recipe-entry');
-            entries.forEach(entry => {
-                txt += entry.querySelector('strong').innerText + "\n";
-                entry.querySelectorAll('table tr').forEach(row => {
-                    txt += Array.from(row.querySelectorAll('th, td')).map(c => c.innerText).join(" | ") + "\n";
-                });
-                entry.querySelectorAll('.editable-text').forEach(t => txt += t.innerText + "\n");
-                txt += "-------------------\n\n";
-            });
-            const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
-            const blob = new Blob([bom, txt], { type: 'text/plain;charset=utf-8' });
+            let txt = "SỔ TAY NẤU ĂN\n\n" + preview.innerText.replace(/XÓA MÓN/g, '');
+            const blob = new Blob(["\ufeff", txt], { type: 'text/plain;charset=utf-8' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `Kitchen_Diary_V17.txt`;
-            a.click();
+            a.download = `Recipes.txt`; a.click();
         }
+
+        preview.addEventListener('input', saveToLocal);
     </script>
 </body>
 </html>
