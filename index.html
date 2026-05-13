@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sổ Tay Nấu Ăn V18.3 - Full DataList & Fix Delete</title>
+    <title>Sổ Tay Nấu Ăn V18.6 - Fix Row Edit</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
@@ -58,7 +58,7 @@
         .btn-export { background: var(--neon-pink); color: #fff; }
         .btn-reset { background: #444; color: #fff; }
 
-        #htmlPreview { margin-top: 15px; padding: 8px; border-radius: 8px; background: #000; border: 1px solid rgba(0, 255, 65, 0.2); min-height: 50px; }
+        #htmlPreview { margin-top: 15px; padding: 8px; border-radius: 8px; background: #000; border: 1px solid rgba(0, 255, 65, 0.2); }
         .recipe-entry { position: relative; margin-bottom: 20px; padding-top: 15px; }
 
         .del-recipe-x {
@@ -67,7 +67,6 @@
             border-radius: 50% !important; width: 28px !important; height: 28px !important; 
             font-size: 16px !important; font-weight: bold !important; cursor: pointer !important;
             display: none !important; align-items: center; justify-content: center; z-index: 999;
-            box-shadow: 0 0 10px rgba(255,0,0,0.5);
         }
 
         .unlocked .del-recipe-x { display: flex !important; }
@@ -93,14 +92,12 @@
 <body>
 
     <div class="container">
-        <h2>👨‍🍳 KITCHEN DIARY V18.3</h2>
+        <h2>👨‍🍳 KITCHEN DIARY V18.6</h2>
 
-        <!-- DATALIST KHÔI PHỤC TẠI ĐÂY -->
         <datalist id="unit-suggestions">
             <option value="gam"> <option value="ml"> <option value="miếng"> <option value="chiếc">
             <option value="thìa canh"> <option value="thìa cafe"> <option value="bát con"> <option value="quả">
             <option value="nhúm nhỏ"> <option value="lát"> <option value="gắp"> <option value="cọng">
-            <option value="bó"> <option value="khay"> <option value="hộp"> <option value="tép">
         </datalist>
 
         <div class="x1-main-box">
@@ -143,21 +140,17 @@
         const PASS_CODE = "4321"; 
         let isUnlocked = false;
         let lastState = null;
-
         const preview = document.getElementById('htmlPreview');
 
         window.onload = () => {
             const savedHtml = localStorage.getItem('cook_html_v17');
-            if (savedHtml) {
-                preview.innerHTML = savedHtml;
-            }
+            if (savedHtml) preview.innerHTML = savedHtml;
             addX2i();
             document.getElementById('cookingSteps').value = "1. ";
             document.getElementById('notes').value = "1. ";
             applyLockStatus();
         };
 
-        // EVENT DELEGATION: Sửa lỗi bấm nút X không xóa
         preview.addEventListener('click', (e) => {
             if (e.target.classList.contains('del-recipe-x')) {
                 if (confirm('Xác nhận xóa món này?')) {
@@ -168,9 +161,33 @@
             }
         });
 
-        function saveSnapshot() {
-            lastState = preview.innerHTML;
-        }
+        preview.addEventListener('contextmenu', (e) => {
+            if (!isUnlocked) return;
+            const td = e.target.closest('td');
+            if (td) {
+                e.preventDefault();
+                const tr = td.parentElement;
+                const tbody = tr.parentElement;
+                if(confirm("Thêm hàng mới? (Cancel để Xóa hàng này)")) {
+                    saveSnapshot();
+                    const newRow = tr.cloneNode(true);
+                    newRow.querySelectorAll('td').forEach((cell, idx) => {
+                        if(idx === 0) cell.innerText = tbody.rows.length + 1;
+                        else cell.innerText = "...";
+                    });
+                    tr.after(newRow);
+                } else {
+                    if(tbody.rows.length > 1) {
+                        saveSnapshot();
+                        tr.remove();
+                    }
+                }
+                applyLockStatus(); // QUAN TRỌNG: Cập nhật quyền sửa cho hàng mới
+                localStorage.setItem('cook_html_v17', preview.innerHTML);
+            }
+        });
+
+        function saveSnapshot() { lastState = preview.innerHTML; }
 
         function undoAction() {
             if (!lastState) return alert("Không có gì để hoàn tác!");
@@ -178,7 +195,6 @@
             localStorage.setItem('cook_html_v17', lastState);
             lastState = null; 
             applyLockStatus();
-            alert("Đã Undo!");
         }
 
         function toggleSecurity() {
@@ -186,7 +202,7 @@
                 if (prompt("Mật khẩu:") === PASS_CODE) {
                     isUnlocked = true;
                     applyLockStatus();
-                } else { alert("Sai!"); }
+                }
             } else {
                 isUnlocked = false;
                 applyLockStatus();
@@ -200,12 +216,17 @@
                 btn.innerText = "🔒 Khóa & Lưu";
                 btn.classList.add('unlocked-state');
                 preview.classList.add('unlocked');
-                preview.querySelectorAll('[contenteditable]').forEach(el => el.contentEditable = "true");
+                // Gán quyền sửa cho tất cả các thành phần
+                preview.querySelectorAll('td, .editable-text, strong').forEach(el => {
+                    el.contentEditable = "true";
+                });
             } else {
                 btn.innerText = "🔓 Mở khóa sửa";
                 btn.classList.remove('unlocked-state');
                 preview.classList.remove('unlocked');
-                preview.querySelectorAll('[contenteditable]').forEach(el => el.contentEditable = "false");
+                preview.querySelectorAll('[contenteditable]').forEach(el => {
+                    el.contentEditable = "false";
+                });
             }
         }
 
@@ -227,7 +248,6 @@
         function saveRecipe() {
             const name = document.getElementById('recipeName').value.trim();
             if (!name) return alert("Nhập tên món!");
-
             saveSnapshot();
 
             let tableRows = "";
