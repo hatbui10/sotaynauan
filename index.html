@@ -78,7 +78,12 @@
 
         .recipe-table th, .recipe-table td { border: 1px solid #333; padding: 6px; text-align: left; }
         .recipe-table th { background: rgba(0, 242, 255, 0.1); color: var(--neon-blue); }
-        
+          /* ĐỊNH NGHĨA ĐỘ RỘNG CÁC CỘT TẠI ĐÂY */
+    .recipe-table th:nth-child(1) { width: 10px; }  /* Cột # */
+    .recipe-table th:nth-child(2) { width: auto; }  /* Cột Tên */
+    .recipe-table th:nth-child(3) { width: 10px; }  /* Cột SL (Bạn chỉnh chỗ này) */
+    .recipe-table th:nth-child(4) { width: 55px; }  /* Cột ĐV */
+    .recipe-table th:nth-child(5) { width: 50px; }  /* Cột T.Thái */
         .editable-text { white-space: pre-wrap; outline: none; padding: 5px; border-radius: 4px; margin-top: 5px; }
 
         .lock-container { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
