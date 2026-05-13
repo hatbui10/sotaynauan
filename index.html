@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sổ Tay Nấu Ăn V28 - Ultimate Grid</title>
+    <title>Sổ Tay Nấu Ăn V30 - Split Steps & Compact Table</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
@@ -15,41 +15,37 @@
         body { background-color: var(--bg-deep); color: #fff; font-family: -apple-system, sans-serif; margin: 0; padding: 15px; }
         .container { max-width: 550px; margin: auto; }
         
-        /* SECURITY BAR */
         .security-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 15px; border: 1px solid #333; }
         .lock-btn { background: transparent; border: 1px solid orange; color: orange; padding: 5px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; text-transform: uppercase; }
         .unlocked-state { border-color: var(--neon-green); color: var(--neon-green); font-weight: bold; }
 
-        h2 { text-align: center; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 1px; }
+        h2 { text-align: center; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 1px; margin: 10px 0; }
         
-        /* GRID SYSTEM */
-        .recipe-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; }
-        .grid-item { aspect-ratio: 1/1; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,242,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px; font-size: 10px; color: var(--neon-green); cursor: pointer; text-transform: uppercase; font-weight: bold; overflow: hidden; }
+        .recipe-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 15px 0; }
+        .grid-item { aspect-ratio: 1/1; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,242,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 5px; font-size: 10px; color: var(--neon-green); cursor: pointer; text-transform: uppercase; font-weight: bold; overflow: hidden; }
 
-        /* MODAL */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999; overflow-y: auto; padding: 15px; box-sizing: border-box; }
-        .modal-content { background: #111; border: 1px solid var(--neon-blue); border-radius: 15px; padding: 20px; max-width: 500px; margin: auto; position: relative; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999; overflow-y: auto; padding: 12px; box-sizing: border-box; }
+        .modal-content { background: #111; border: 1px solid var(--neon-blue); border-radius: 12px; padding: 15px; max-width: 500px; margin: auto; position: relative; }
 
-        /* TABLE COLUMNS */
-        .recipe-table { width: 100%; border-collapse: collapse; font-size: 11px; margin: 10px 0; table-layout: fixed; }
-        .recipe-table th, .recipe-table td { border: 1px solid #333; padding: 6px; text-align: left; }
-        .col-idx { width: 35px; text-align: center !important; }
-        .col-name { width: 40%; }
-        .col-val { width: 15%; text-align: center !important; }
-        .col-unit { width: 15%; text-align: center !important; }
-        .col-status { width: 20%; }
+        .x2i-box { background: rgba(255, 255, 255, 0.03); border: 1px solid #333; border-radius: 8px; padding: 8px; margin-bottom: 8px; position: relative; }
+        .section-title { font-size: 10px; color: var(--neon-pink); text-transform: uppercase; margin: 12px 0 6px 0; display: block; border-left: 3px solid var(--neon-pink); padding-left: 8px; }
+
+        input, textarea { background: #000; border: 1px solid #444; border-radius: 6px; color: #fff; padding: 8px; font-size: 14px; outline: none; width: 100%; box-sizing: border-box; }
         
-        .edit-input { background: transparent; border: none; color: #fff; width: 100%; font-size: 11px; outline: none; }
-        .in-n { color: var(--neon-green); }
+        /* BẢNG COMPACT (RÚT GỌN PADDING) */
+        .recipe-table { width: 100%; border-collapse: collapse; font-size: 11px; margin: 8px 0; table-layout: auto; }
+        .recipe-table th, .recipe-table td { border: 1px solid #333; padding: 3px 4px; text-align: left; }
+        .col-idx { width: 7%; text-align: center !important; }
+        .col-name { width: 36%; }
+        .col-val { width: 7%; text-align: center !important; }
+        .col-unit { width: 25%; text-align: center !important; }
+        .col-status { width: 25%; }
+        
+        .edit-input { background: transparent; border: none; color: #fff; width: 100%; font-size: 11px; padding: 0; }
 
-        /* BUTTONS */
-        .btn-main { width: 100%; padding: 15px; background: none; border: 2px dashed var(--neon-blue); color: var(--neon-blue); border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
-        .btn-save { width: 100%; background: var(--neon-green); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        .btn-main { width: 100%; padding: 12px; background: none; border: 2px dashed var(--neon-blue); color: var(--neon-blue); border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+        .btn-save { width: 100%; background: var(--neon-green); color: #000; border: none; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 8px; cursor: pointer; text-transform: uppercase; font-size: 12px; }
         .btn-del { background: #ff4444 !important; color: #fff !important; }
-        .btn-export { background: var(--neon-pink); color: #fff; border: none; padding: 10px; border-radius: 8px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; }
-
-        textarea { width: 100%; background: #000; border: 1px solid #333; color: #ccc; border-radius: 5px; padding: 8px; margin-top: 10px; box-sizing: border-box; font-size: 12px; }
-        .del-row-btn { background: #ff4444; color: white; border: none; padding: 2px 5px; border-radius: 3px; cursor: pointer; display: none; }
     </style>
 </head>
 <body>
@@ -60,23 +56,44 @@
         <button class="lock-btn" style="border-color:var(--neon-pink); color:var(--neon-pink)" onclick="exportTxt()">📥 Xuất TXT</button>
     </div>
 
-    <h2>KITCHEN GRID V28</h2>
-    <button class="btn-main" onclick="openAddModal()">+ THÊM MÓN ĂN MỚI</button>
+    <h2>KITCHEN GRID V30</h2>
+    <button class="btn-main" onclick="openAddModal()">+ THÊM MÓN MỚI (BOX)</button>
     <div class="recipe-grid" id="recipeGrid"></div>
 </div>
 
-<!-- MODAL CHI TIẾT & SỬA -->
+<!-- MODAL THÊM MỚI (BOX STYLE) -->
+<div id="addModal" class="modal">
+    <div class="modal-content">
+        <h3 style="color:var(--neon-blue); margin:0 0 10px 0; font-size: 16px;">🥘 NHẬP MÓN MỚI</h3>
+        <span class="section-title">X1: Tên món ăn</span>
+        <input type="text" id="newName" placeholder="Tên món...">
+        
+        <span class="section-title">Thành phần</span>
+        <div id="addInputList"></div>
+        <button onclick="addRowBox()" style="background:transparent; color:var(--neon-green); border:1px dashed var(--neon-green); width:100%; padding:6px; border-radius:6px; font-size:11px;">+ THÊM NGUYÊN LIỆU</button>
+        
+        <span class="section-title">X2: Cách chế biến</span>
+        <textarea id="newSteps" rows="3" placeholder="Các bước nấu..."></textarea>
+
+        <span class="section-title">X3: Ghi chú / Lưu ý</span>
+        <textarea id="newNotes" rows="2" placeholder="Lưu ý nhỏ..."></textarea>
+        
+        <button class="btn-save" onclick="saveNewRecipe()">💾 LƯU MÓN</button>
+        <button class="btn-save" style="background:#444; color:#ccc" onclick="closeModal('addModal')">ĐÓNG</button>
+    </div>
+</div>
+
+<!-- MODAL CHI TIẾT -->
 <div id="detailModal" class="modal">
     <div class="modal-content">
         <button onclick="closeModal('detailModal')" style="position:absolute; right:10px; top:10px; background:none; border:none; color:#fff; font-size:20px;">✕</button>
         <div id="detailBody"></div>
         
         <div id="editActions" style="display:none">
-            <button class="btn-save" style="background:none; border:1px solid var(--neon-blue); color:var(--neon-blue)" onclick="addRowEd()">+ THÊM HÀNG</button>
-            <button class="btn-save" onclick="saveEdit()">💾 LƯU THAY ĐỔI</button>
-            <button class="btn-save btn-del" onclick="deleteRecipe()">🗑️ XOÁ MÓN ĂN</button>
+            <button class="btn-save" style="background:none; border:1px solid var(--neon-blue); color:var(--neon-blue)" onclick="addRowTable()">+ THÊM HÀNG</button>
+            <button class="btn-save" onclick="saveEdit()">💾 CẬP NHẬT</button>
+            <button class="btn-save btn-del" onclick="deleteRecipe()">🗑️ XOÁ MÓN</button>
         </div>
-        
         <button id="btnEnterEdit" class="btn-save" style="background:#ffcc00; display:none" onclick="enableEditMode()">✏️ CHẾ ĐỘ SỬA</button>
     </div>
 </div>
@@ -86,24 +103,7 @@
     let isUnlocked = false;
     let currentIdx = null;
 
-    // Khôi phục data list cũ nếu có
-    window.onload = () => {
-        const oldData = localStorage.getItem('cook_html_v17');
-        if (oldData && recipes.length === 0) {
-            const div = document.createElement('div'); div.innerHTML = oldData;
-            div.querySelectorAll('.recipe-entry').forEach(entry => {
-                const name = entry.querySelector('strong')?.innerText.replace('🥘 MÓN: ', '') || "Không tên";
-                const ings = [];
-                entry.querySelectorAll('tbody tr').forEach(tr => {
-                    const td = tr.querySelectorAll('td');
-                    if(td.length >= 5) ings.push({ n: td[1].innerText, a: td[2].innerText, u: td[3].innerText, s: td[4].innerText });
-                });
-                recipes.push({ name, ings, steps: entry.querySelector('.editable-text')?.innerText || "" });
-            });
-            localStorage.setItem('cook_grid_v21', JSON.stringify(recipes));
-        }
-        renderGrid();
-    };
+    window.onload = () => { renderGrid(); };
 
     function renderGrid() {
         const grid = document.getElementById('recipeGrid');
@@ -117,24 +117,71 @@
         });
     }
 
+    function openAddModal() {
+        document.getElementById('addInputList').innerHTML = '';
+        document.getElementById('newName').value = '';
+        document.getElementById('newSteps').value = '1. ';
+        document.getElementById('newNotes').value = '1. ';
+        addRowBox();
+        document.getElementById('addModal').style.display = 'block';
+    }
+
+    function addRowBox() {
+        const div = document.createElement('div');
+        div.className = 'x2i-box';
+        div.innerHTML = `
+            <button onclick="this.parentElement.remove()" style="position:absolute; right:5px; top:5px; background:#ff4444; border:none; color:white; border-radius:50%; width:18px; height:18px; font-size:10px;">✕</button>
+            <input type="text" class="in-n" placeholder="Tên..." style="margin-bottom:4px; padding:6px">
+            <div style="display:flex; gap:4px">
+                <input type="text" class="in-a" placeholder="SL" style="flex:1; padding:6px">
+                <input type="text" class="in-u" placeholder="ĐV" style="flex:1; padding:6px">
+                <input type="text" class="in-s" placeholder="TT" style="flex:1.5; padding:6px">
+            </div>`;
+        document.getElementById('addInputList').appendChild(div);
+    }
+
+    function saveNewRecipe() {
+        const name = document.getElementById('newName').value.trim();
+        if(!name) return alert("Thiếu tên món!");
+        
+        const ings = [];
+        document.querySelectorAll('#addInputList .x2i-box').forEach(box => {
+            const n = box.querySelector('.in-n').value;
+            if(n) ings.push({ n, a: box.querySelector('.in-a').value, u: box.querySelector('.in-u').value, s: box.querySelector('.in-s').value });
+        });
+
+        recipes.unshift({ 
+            name, 
+            ings, 
+            steps: document.getElementById('newSteps').value,
+            notes: document.getElementById('newNotes').value 
+        });
+        localStorage.setItem('cook_grid_v21', JSON.stringify(recipes));
+        renderGrid();
+        closeModal('addModal');
+    }
+
     function showDetail(i) {
         currentIdx = i; const r = recipes[i];
         let rows = r.ings.map((ing, idx) => `
             <tr class="ing-row">
-                <td class="col-idx"><button class="del-row-btn" onclick="this.parentElement.parentElement.remove()">✕</button><span class="row-num">${idx+1}</span></td>
-                <td class="col-name"><input type="text" class="edit-input in-n" value="${ing.n}" readonly></td>
+                <td class="col-idx"><button class="btn-del" style="display:none; padding:1px 4px; border:none; font-size:9px" onclick="this.parentElement.parentElement.remove()">✕</button><span class="row-num">${idx+1}</span></td>
+                <td class="col-name"><input type="text" class="edit-input in-n" value="${ing.n}" readonly style="color:var(--neon-green)"></td>
                 <td class="col-val"><input type="text" class="edit-input in-a" value="${ing.a}" readonly></td>
                 <td class="col-unit"><input type="text" class="edit-input in-u" value="${ing.u}" readonly></td>
                 <td class="col-status"><input type="text" class="edit-input in-s" value="${ing.s}" readonly></td>
             </tr>`).join('');
 
         document.getElementById('detailBody').innerHTML = `
-            <input type="text" id="edName" value="${r.name}" style="background:transparent; border:none; color:var(--neon-blue); font-size:18px; font-weight:bold; width:100%; text-align:center; margin-bottom:10px" readonly>
+            <input type="text" id="edName" value="${r.name}" style="background:transparent; border:none; color:var(--neon-blue); font-size:16px; font-weight:bold; width:100%; text-align:center; margin-bottom:8px" readonly>
             <table class="recipe-table">
                 <thead><tr style="color:var(--neon-pink)"><th>#</th><th>Tên</th><th>SL</th><th>ĐV</th><th>TT</th></tr></thead>
                 <tbody id="edTableBody">${rows}</tbody>
             </table>
-            <textarea id="edSteps" rows="5" readonly>${r.steps}</textarea>
+            <span class="section-title">Chế biến</span>
+            <textarea id="edSteps" rows="4" readonly>${r.steps || ""}</textarea>
+            <span class="section-title">Lưu ý</span>
+            <textarea id="edNotes" rows="2" readonly>${r.notes || ""}</textarea>
         `;
         
         document.getElementById('detailModal').style.display = 'block';
@@ -142,26 +189,17 @@
         updateUI();
     }
 
-    function openAddModal() {
-        recipes.unshift({ name: "MÓN MỚI", ings: [{n:"", a:"", u:"", s:""}], steps: "" });
-        showDetail(0);
-        enableEditMode();
-    }
-
     function enableEditMode() {
-        document.querySelectorAll('.edit-input, #edSteps, #edName').forEach(el => {
-            el.readOnly = false;
-            if(el.classList.contains('edit-input')) el.style.borderBottom = "1px solid #333";
-        });
-        document.querySelectorAll('.del-row-btn').forEach(el => el.style.display = 'block');
+        document.querySelectorAll('.edit-input, textarea, #edName').forEach(el => el.readOnly = false);
+        document.querySelectorAll('.ing-row .btn-del').forEach(el => el.style.display = 'block');
         document.querySelectorAll('.row-num').forEach(el => el.style.display = 'none');
         document.getElementById('editActions').style.display = 'block';
         document.getElementById('btnEnterEdit').style.display = 'none';
     }
 
-    function addRowEd() {
+    function addRowTable() {
         const tr = document.createElement('tr'); tr.className = 'ing-row';
-        tr.innerHTML = `<td class="col-idx"><button class="del-row-btn" style="display:block" onclick="this.parentElement.parentElement.remove()">✕</button></td><td><input type="text" class="edit-input in-n"></td><td><input type="text" class="edit-input in-a"></td><td><input type="text" class="edit-input in-u"></td><td><input type="text" class="edit-input in-s"></td>`;
+        tr.innerHTML = `<td class="col-idx"><button class="btn-del" style="display:block; padding:1px 4px; border:none; font-size:9px" onclick="this.parentElement.parentElement.remove()">✕</button></td><td><input type="text" class="edit-input in-n"></td><td><input type="text" class="edit-input in-a"></td><td><input type="text" class="edit-input in-u"></td><td><input type="text" class="edit-input in-s"></td>`;
         document.getElementById('edTableBody').appendChild(tr);
     }
 
@@ -171,22 +209,22 @@
             const n = row.querySelector('.in-n').value;
             if(n) newIngs.push({ n, a: row.querySelector('.in-a').value, u: row.querySelector('.in-u').value, s: row.querySelector('.in-s').value });
         });
-        recipes[currentIdx] = { name: document.getElementById('edName').value, ings: newIngs, steps: document.getElementById('edSteps').value };
+        recipes[currentIdx] = { 
+            name: document.getElementById('edName').value, 
+            ings: newIngs, 
+            steps: document.getElementById('edSteps').value,
+            notes: document.getElementById('edNotes').value
+        };
         localStorage.setItem('cook_grid_v21', JSON.stringify(recipes));
         renderGrid(); closeModal('detailModal');
     }
 
     function deleteRecipe() {
-        if(confirm("Xoá món này vĩnh viễn?")) {
-            recipes.splice(currentIdx, 1);
-            localStorage.setItem('cook_grid_v21', JSON.stringify(recipes));
-            renderGrid(); closeModal('detailModal');
-        }
+        if(confirm("Xoá món này?")) { recipes.splice(currentIdx, 1); localStorage.setItem('cook_grid_v21', JSON.stringify(recipes)); renderGrid(); closeModal('detailModal'); }
     }
 
     function toggleSecurity() {
-        if(!isUnlocked) { if(prompt("Pass:") === "4321") isUnlocked = true; } 
-        else isUnlocked = false;
+        if(!isUnlocked) { if(prompt("Pass:") === "4321") isUnlocked = true; } else isUnlocked = false;
         updateUI();
     }
 
@@ -198,14 +236,15 @@
     }
 
     function exportTxt() {
-        let txt = "SỔ TAY NẤU ĂN\n\n";
+        let txt = "--- SỔ TAY NẤU ĂN V30 ---\n\n";
         recipes.forEach(r => {
             txt += `🥘 MÓN: ${r.name.toUpperCase()}\n`;
-            r.ings.forEach(i => txt += `- ${i.n}: ${i.a} ${i.u} (${i.s})\n`);
-            txt += `📝 CÁCH LÀM: ${r.steps}\n\n------------------\n\n`;
+            r.ings.forEach(i => txt += `- ${i.n}: ${i.a} ${i.u} [${i.s}]\n`);
+            txt += `📝 CHẾ BIẾN:\n${r.steps}\n`;
+            txt += `💡 LƯU Ý:\n${r.notes}\n\n------------------\n\n`;
         });
         const blob = new Blob(["\ufeff", txt], { type: 'text/plain' });
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'SoTayNauAn.txt'; a.click();
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'Cookbook_Grid.txt'; a.click();
     }
 
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
