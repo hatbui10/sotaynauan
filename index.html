@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sổ Tay Nấu Ăn V16</title>
+    <title>Sổ Tay Nấu Ăn V17 - Đã Trả Lại Đơn Vị</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
@@ -63,7 +64,7 @@
         .btn-export { background: var(--neon-pink); color: #fff; }
         .btn-reset { background: #333; color: #fff; }
 
-        /* BẢNG KẾT QUẢ */
+        /* BẢNG KẾT QUẢ SỬA ĐƯỢC */
         #htmlPreview { margin-top: 15px; padding: 8px; border-radius: 8px; background: #000; border: 1px solid rgba(0, 255, 65, 0.2); }
         
         .recipe-table {
@@ -84,7 +85,7 @@
             vertical-align: top;
         }
 
-        .recipe-table td:focus { background: rgba(0, 255, 65, 0.05); }
+        .recipe-table td:focus { background: rgba(0, 255, 65, 0.1); border: 1px solid var(--neon-green); }
         .recipe-table th { background: rgba(0, 242, 255, 0.1); color: var(--neon-blue); }
         
         .flex-group { display: flex; gap: 6px; margin-top: 8px; }
@@ -95,7 +96,25 @@
 <body>
 
     <div class="container">
-        <h2>👨‍🍳 KITCHEN DIARY V16</h2>
+        <h2>👨‍🍳 KITCHEN DIARY V17</h2>
+
+        <!-- DANH SÁCH ĐƠN VỊ (DATALIST) -->
+        <datalist id="unit-suggestions">
+            <option value="gam">
+            <option value="ml">
+            <option value="chiếc">
+<option value="bóp">
+<option value="gắp">
+            <option value="nắm">
+            <option value="muỗng canh">
+            <option value="thìa cafe">
+            <option value="bát">
+            <option value="tô">
+            <option value="quả">
+            <option value="củ">
+            <option value="nhánh">
+            <option value="lát">
+        </datalist>
 
         <div class="x1-main-box">
             <span class="section-title">X1: Tên món ăn</span>
@@ -124,7 +143,7 @@
             <button class="main-btn btn-reset" onclick="resetForm()">Reset</button>
         </div>
 
-        <span class="section-title">Danh sách món đã lưu (Bấm vào để sửa)</span>
+        <span class="section-title">Danh sách món đã lưu (Bấm vào bảng để sửa)</span>
         <div id="htmlPreview"></div>
     </div>
 
@@ -135,7 +154,7 @@
         const notesArea = document.getElementById('notes');
 
         window.onload = () => {
-            const savedHtml = localStorage.getItem('cook_html_v16');
+            const savedHtml = localStorage.getItem('cook_html_v17');
             if (savedHtml) preview.innerHTML = savedHtml;
             addX2i();
             stepsArea.value = "1. ";
@@ -151,13 +170,14 @@
                 <input type="text" class="in-ing" placeholder="Tên...">
                 <div class="flex-group">
                     <input type="text" class="in-amt" placeholder="SL" style="flex:1">
-                    <input type="text" class="in-unit" placeholder="ĐV" style="flex:1">
+                    <input type="text" class="in-unit" list="unit-suggestions" placeholder="ĐV" style="flex:1">
                     <input type="text" class="in-status" placeholder="Trạng thái" style="flex:1.5">
                 </div>
             `;
             x2iList.appendChild(div);
         }
 
+        // Tự động nhảy số 1. 2.
         function setupAutoNumber(el) {
             el.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
@@ -205,17 +225,14 @@
                 <hr style="border:0; border-top:1px dashed #333; margin:15px 0;">
             </div>`;
 
-            // Chèn lên đầu
             preview.innerHTML = tableHtml + preview.innerHTML;
-            
-            // Lưu trạng thái HTML vào máy
-            localStorage.setItem('cook_html_v16', preview.innerHTML);
+            localStorage.setItem('cook_html_v17', preview.innerHTML);
             resetForm();
         }
 
-        // Tự động lưu khi bạn sửa trực tiếp vào bảng
+        // Tự động lưu khi sửa trực tiếp trên bảng kết quả
         preview.addEventListener('input', () => {
-            localStorage.setItem('cook_html_v16', preview.innerHTML);
+            localStorage.setItem('cook_html_v17', preview.innerHTML);
         });
 
         function resetForm() {
@@ -227,28 +244,21 @@
         }
 
         function exportTxt() {
-            // Lấy dữ liệu thuần túy từ bảng để xuất TXT
             let txt = "SỔ TAY NẤU ĂN\n\n";
             const entries = document.querySelectorAll('.recipe-entry');
             entries.forEach(entry => {
-                const name = entry.querySelector('strong').innerText;
-                txt += name + "\n";
-                const rows = entry.querySelectorAll('table tr');
-                rows.forEach((row, i) => {
-                    const cells = row.querySelectorAll('th, td');
-                    let rowData = Array.from(cells).map(c => c.innerText).join(" | ");
-                    txt += rowData + "\n";
+                txt += entry.querySelector('strong').innerText + "\n";
+                entry.querySelectorAll('table tr').forEach(row => {
+                    txt += Array.from(row.querySelectorAll('th, td')).map(c => c.innerText).join(" | ") + "\n";
                 });
-                const texts = entry.querySelectorAll('.editable-text');
-                texts.forEach(t => txt += t.innerText + "\n");
+                entry.querySelectorAll('.editable-text').forEach(t => txt += t.innerText + "\n");
                 txt += "-------------------\n\n";
             });
-            
             const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
             const blob = new Blob([bom, txt], { type: 'text/plain;charset=utf-8' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `Kitchen_Diary.txt`;
+            a.download = `Kitchen_Diary_V17.txt`;
             a.click();
         }
     </script>
