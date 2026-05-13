@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sổ Tay Nấu Ăn V17 - Đã Trả Lại Đơn Vị</title>
+    <title>Sổ Tay Nấu Ăn V17 - Bảo Mật</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
@@ -64,7 +63,7 @@
         .btn-export { background: var(--neon-pink); color: #fff; }
         .btn-reset { background: #333; color: #fff; }
 
-        /* BẢNG KẾT QUẢ SỬA ĐƯỢC */
+        /* BẢNG KẾT QUẢ */
         #htmlPreview { margin-top: 15px; padding: 8px; border-radius: 8px; background: #000; border: 1px solid rgba(0, 255, 65, 0.2); }
         
         .recipe-table {
@@ -85,12 +84,35 @@
             vertical-align: top;
         }
 
-        .recipe-table td:focus { background: rgba(0, 255, 65, 0.1); border: 1px solid var(--neon-green); }
+        /* Hiệu ứng khi được phép sửa */
+        .unlocked .recipe-table td:focus { background: rgba(0, 255, 65, 0.1); border: 1px solid var(--neon-green); }
         .recipe-table th { background: rgba(0, 242, 255, 0.1); color: var(--neon-blue); }
         
         .flex-group { display: flex; gap: 6px; margin-top: 8px; }
         .editable-text { white-space: pre-wrap; outline: none; padding: 5px; border-radius: 4px; margin-top: 5px; }
-        .editable-text:focus { background: rgba(255, 0, 234, 0.05); }
+        .unlocked .editable-text:focus { background: rgba(255, 0, 234, 0.05); }
+
+        /* Nút khóa */
+        .lock-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .lock-btn {
+            background: transparent;
+            border: 1px solid orange;
+            color: orange;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .unlocked-state {
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+        }
     </style>
 </head>
 <body>
@@ -98,24 +120,11 @@
     <div class="container">
         <h2>👨‍🍳 KITCHEN DIARY V17</h2>
 
-        <!-- DANH SÁCH ĐƠN VỊ (DATALIST) -->
         <datalist id="unit-suggestions">
-            <option value="gam">
-            <option value="ml">
-            <option value="miếng">
-            <option value="chiếc">
-            <option value="bóp">
-            <option value="gắp">
-            <option value="nhúm nhỏ">
-            <option value="nắm">
-            <option value="thìa canh đầy">
-            <option value="thìa cafe đầy">
-            <option value="bát">
-            <option value="tô">
-            <option value="quả">
-            <option value="củ">
-            <option value="nhánh">
-            <option value="lát">
+            <option value="gam"> <option value="ml"> <option value="miếng"> <option value="chiếc">
+            <option value="bóp"> <option value="gắp"> <option value="nhúm nhỏ"> <option value="nắm">
+            <option value="thìa canh đầy"> <option value="thìa cafe đầy"> <option value="bát"> <option value="tô">
+            <option value="quả"> <option value="củ"> <option value="nhánh"> <option value="lát">
         </datalist>
 
         <div class="x1-main-box">
@@ -145,11 +154,18 @@
             <button class="main-btn btn-reset" onclick="resetForm()">Reset</button>
         </div>
 
-        <span class="section-title">Danh sách món đã lưu (Bấm vào bảng để sửa)</span>
+        <div class="lock-container">
+            <span class="section-title">Danh sách món đã lưu</span>
+            <button class="lock-btn" id="btnToggleLock" onclick="toggleSecurity()">🔓 Mở khóa sửa</button>
+        </div>
+        
         <div id="htmlPreview"></div>
     </div>
 
     <script>
+        const PASS_CODE = "4321"; // <-- ĐỔI MẬT KHẨU CỦA BẠN TẠI ĐÂY
+        let isUnlocked = false;
+
         const x2iList = document.getElementById('x2i-list');
         const preview = document.getElementById('htmlPreview');
         const stepsArea = document.getElementById('cookingSteps');
@@ -161,7 +177,43 @@
             addX2i();
             stepsArea.value = "1. ";
             notesArea.value = "1. ";
+            applyLockStatus(); // Luôn khóa khi tải trang
         };
+
+        // Hàm bảo mật
+        function toggleSecurity() {
+            if (!isUnlocked) {
+                let input = prompt("Nhập mật khẩu để chỉnh sửa:");
+                if (input === PASS_CODE) {
+                    isUnlocked = true;
+                    applyLockStatus();
+                } else {
+                    alert("Sai mật khẩu!");
+                }
+            } else {
+                isUnlocked = false;
+                applyLockStatus();
+                localStorage.setItem('cook_html_v17', preview.innerHTML); // Lưu lại khi khóa
+                alert("Đã khóa và lưu dữ liệu!");
+            }
+        }
+
+        function applyLockStatus() {
+            const btn = document.getElementById('btnToggleLock');
+            const editables = preview.querySelectorAll('[contenteditable]');
+            
+            if (isUnlocked) {
+                btn.innerText = "🔒 Khóa & Lưu";
+                btn.classList.add('unlocked-state');
+                preview.classList.add('unlocked');
+                editables.forEach(el => el.contentEditable = "true");
+            } else {
+                btn.innerText = "🔓 Mở khóa sửa";
+                btn.classList.remove('unlocked-state');
+                preview.classList.remove('unlocked');
+                editables.forEach(el => el.contentEditable = "false");
+            }
+        }
 
         function addX2i() {
             const div = document.createElement('div');
@@ -179,7 +231,6 @@
             x2iList.appendChild(div);
         }
 
-        // Tự động nhảy số 1. 2.
         function setupAutoNumber(el) {
             el.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
@@ -201,7 +252,7 @@
             if (!name) return alert("Nhập tên món!");
 
             let tableHtml = `<div class="recipe-entry">
-                <strong contenteditable="true" style="color:var(--neon-blue); display:block; margin:10px 0;">🥘 MÓN: ${name.toUpperCase()}</strong>
+                <strong style="color:var(--neon-blue); display:block; margin:10px 0;">🥘 MÓN: ${name.toUpperCase()}</strong>
                 <table class="recipe-table">
                     <thead><tr><th style="width:10%">#</th><th style="width:35%">Tên</th><th style="width:15%">SL</th><th style="width:15%">ĐV</th><th style="width:25%">T.Thái</th></tr></thead>
                     <tbody>`;
@@ -211,30 +262,41 @@
                 const amt = item.querySelector('.in-amt').value || "-";
                 const unit = item.querySelector('.in-unit').value || "-";
                 const stat = item.querySelector('.in-status').value || "-";
-
                 tableHtml += `<tr>
-                    <td contenteditable="true">${index+1}</td>
-                    <td contenteditable="true">${ing}</td>
-                    <td contenteditable="true">${amt}</td>
-                    <td contenteditable="true">${unit}</td>
-                    <td contenteditable="true">${stat}</td>
+                    <td>${index+1}</td>
+                    <td>${ing}</td>
+                    <td>${amt}</td>
+                    <td>${unit}</td>
+                    <td>${stat}</td>
                 </tr>`;
             });
 
             tableHtml += `</tbody></table>
-                <div contenteditable="true" class="editable-text" style="color:var(--neon-pink); font-size:12px;">📝 CHẾ BIẾN:\n${stepsArea.value}</div>
-                <div contenteditable="true" class="editable-text" style="color:#aaa; font-size:12px; margin-bottom:10px;">💡 LƯU Ý:\n${notesArea.value}</div>
+                <div class="editable-text" style="color:var(--neon-pink); font-size:12px;">📝 CHẾ BIẾN:\n${stepsArea.value}</div>
+                <div class="editable-text" style="color:#aaa; font-size:12px; margin-bottom:10px;">💡 LƯU Ý:\n${notesArea.value}</div>
                 <hr style="border:0; border-top:1px dashed #333; margin:15px 0;">
             </div>`;
 
-            preview.innerHTML = tableHtml + preview.innerHTML;
+            // Chèn vào đầu danh sách
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = tableHtml;
+            const newEntry = tempDiv.firstChild;
+            
+            // Gán thuộc tính contenteditable cho các thành phần trong entry mới
+            newEntry.querySelector('strong').setAttribute('contenteditable', isUnlocked ? "true" : "false");
+            newEntry.querySelectorAll('td').forEach(td => td.setAttribute('contenteditable', isUnlocked ? "true" : "false"));
+            newEntry.querySelectorAll('.editable-text').forEach(div => div.setAttribute('contenteditable', isUnlocked ? "true" : "false"));
+
+            preview.insertBefore(newEntry, preview.firstChild);
             localStorage.setItem('cook_html_v17', preview.innerHTML);
             resetForm();
         }
 
-        // Tự động lưu khi sửa trực tiếp trên bảng kết quả
+        // Tự động lưu khi sửa (chỉ khi đang mở khóa)
         preview.addEventListener('input', () => {
-            localStorage.setItem('cook_html_v17', preview.innerHTML);
+            if (isUnlocked) {
+                localStorage.setItem('cook_html_v17', preview.innerHTML);
+            }
         });
 
         function resetForm() {
