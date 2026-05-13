@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sổ Tay Nấu Ăn V17 - Pro Edit</title>
+    <title>Sổ Tay Nấu Ăn V18.3 - Full DataList & Fix Delete</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
@@ -40,69 +40,67 @@
         }
 
         .x2i-box {
-            background: rgba(0, 0, 0, 0.6); border: 1px solid #333; 
-            border-radius: 8px; padding: 10px; margin-bottom: 12px; position: relative;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #333; border-radius: 8px;
+            padding: 10px; margin-bottom: 12px; position: relative;
         }
 
         input, textarea {
             background: #000; border: 1px solid #444; border-radius: 6px;
-            color: #fff; padding: 10px; font-size: 15px; outline: none; width: 100%; box-sizing: border-box;
+            color: #fff; padding: 10px; font-size: 15px; outline: none;
+            width: 100%; box-sizing: border-box;
         }
 
-        .btn-grid { display: grid; grid-template-columns: 1.2fr 1fr 0.8fr; gap: 8px; margin: 20px 0; }
-        .main-btn { height: 45px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 10px; }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 5px; margin: 20px 0; }
+        .main-btn { height: 45px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 9px; }
         .btn-create { background: var(--neon-blue); color: #000; }
+        .btn-undo { background: #ffcc00; color: #000; }
         .btn-export { background: var(--neon-pink); color: #fff; }
-        .btn-reset { background: #333; color: #fff; }
+        .btn-reset { background: #444; color: #fff; }
 
-        /* BẢNG KẾT QUẢ */
-        #htmlPreview { margin-top: 15px; padding: 8px; border-radius: 8px; background: #000; border: 1px solid rgba(0, 255, 65, 0.2); }
-        
-        .recipe-entry { position: relative; }
-        
-        /* Nút xóa món ăn */
-        .del-recipe-btn {
-            position: absolute; right: 0; top: 0; background: #ff4444; color: white;
-            border: none; border-radius: 4px; padding: 2px 8px; font-size: 10px;
-            cursor: pointer; display: none; z-index: 10;
+        #htmlPreview { margin-top: 15px; padding: 8px; border-radius: 8px; background: #000; border: 1px solid rgba(0, 255, 65, 0.2); min-height: 50px; }
+        .recipe-entry { position: relative; margin-bottom: 20px; padding-top: 15px; }
+
+        .del-recipe-x {
+            position: absolute !important; right: 0px !important; top: 0px !important; 
+            background: #ff4444 !important; color: white !important; border: 1px solid #fff !important; 
+            border-radius: 50% !important; width: 28px !important; height: 28px !important; 
+            font-size: 16px !important; font-weight: bold !important; cursor: pointer !important;
+            display: none !important; align-items: center; justify-content: center; z-index: 999;
+            box-shadow: 0 0 10px rgba(255,0,0,0.5);
         }
-        .unlocked .del-recipe-btn { display: block; }
+
+        .unlocked .del-recipe-x { display: flex !important; }
 
         .recipe-table {
             width: 100%; border-collapse: collapse; font-size: 11px;
             margin: 10px 0; color: var(--neon-green); table-layout: fixed;
         }
 
-        .recipe-table th, .recipe-table td {
-            border: 1px solid #333; padding: 6px; word-wrap: break-word; outline: none; text-align: left;
-        }
-
+        .recipe-table th, .recipe-table td { border: 1px solid #333; padding: 6px; text-align: left; }
         .recipe-table th { background: rgba(0, 242, 255, 0.1); color: var(--neon-blue); }
-        .unlocked td:focus { background: rgba(0, 255, 65, 0.1); border: 1px solid var(--neon-green); }
-
-        .flex-group { display: flex; gap: 6px; margin-top: 8px; }
+        
         .editable-text { white-space: pre-wrap; outline: none; padding: 5px; border-radius: 4px; margin-top: 5px; }
 
         .lock-container { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
         .lock-btn {
             background: transparent; border: 1px solid orange; color: orange;
-            padding: 5px 12px; border-radius: 4px; font-size: 10px; cursor: pointer;
+            padding: 5px 12px; border-radius: 4px; font-size: 10px; cursor: pointer; text-transform: uppercase;
         }
         .unlocked-state { border-color: var(--neon-green); color: var(--neon-green); }
-
-        /* HD Sửa hàng */
-        .edit-hint { font-size: 9px; color: #666; margin-top: 5px; display: none; }
-        .unlocked .edit-hint { display: block; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>👨‍🍳 KITCHEN DIARY V17</h2>
+        <h2>👨‍🍳 KITCHEN DIARY V18.3</h2>
 
+        <!-- DATALIST KHÔI PHỤC TẠI ĐÂY -->
         <datalist id="unit-suggestions">
             <option value="gam"> <option value="ml"> <option value="miếng"> <option value="chiếc">
-            <option value="thìa canh"> <option value="thìa cafe"> <option value="bát"> <option value="quả">
+            <option value="thìa canh"> <option value="thìa cafe"> <option value="bát con"> <option value="quả">
+            <option value="nhúm nhỏ"> <option value="lát"> <option value="gắp"> <option value="cọng">
+            <option value="bó"> <option value="khay"> <option value="hộp"> <option value="tép">
         </datalist>
 
         <div class="x1-main-box">
@@ -122,21 +120,21 @@
         </div>
 
         <div style="margin-top:20px">
-            <span class="section-title">X3: Lưu ý</span>
+            <span class="section-title">X3: Ghi chú</span>
             <textarea id="notes" style="height:80px" placeholder="1. Lưu ý..."></textarea>
         </div>
 
         <div class="btn-grid">
             <button class="main-btn btn-create" onclick="saveRecipe()">Lưu Sổ</button>
+            <button class="main-btn btn-undo" onclick="undoAction()">Undo</button>
             <button class="main-btn btn-export" onclick="exportTxt()">Xuất TXT</button>
             <button class="main-btn btn-reset" onclick="resetForm()">Reset</button>
         </div>
 
         <div class="lock-container">
-            <span class="section-title">Dữ liệu đã lưu</span>
+            <span class="section-title">Danh sách món đã lưu</span>
             <button class="lock-btn" id="btnToggleLock" onclick="toggleSecurity()">🔓 Mở khóa sửa</button>
         </div>
-        <p class="edit-hint">* Mẹo: Mở khóa -> Chuột phải vào ô để Thêm/Xóa hàng. Bấm X để xóa món.</p>
         
         <div id="htmlPreview"></div>
     </div>
@@ -144,123 +142,133 @@
     <script>
         const PASS_CODE = "4321"; 
         let isUnlocked = false;
+        let lastState = null;
 
-        const x2iList = document.getElementById('x2i-list');
         const preview = document.getElementById('htmlPreview');
 
         window.onload = () => {
             const savedHtml = localStorage.getItem('cook_html_v17');
-            if (savedHtml) preview.innerHTML = savedHtml;
+            if (savedHtml) {
+                preview.innerHTML = savedHtml;
+            }
             addX2i();
             document.getElementById('cookingSteps').value = "1. ";
             document.getElementById('notes').value = "1. ";
             applyLockStatus();
         };
 
+        // EVENT DELEGATION: Sửa lỗi bấm nút X không xóa
+        preview.addEventListener('click', (e) => {
+            if (e.target.classList.contains('del-recipe-x')) {
+                if (confirm('Xác nhận xóa món này?')) {
+                    saveSnapshot();
+                    e.target.closest('.recipe-entry').remove();
+                    localStorage.setItem('cook_html_v17', preview.innerHTML);
+                }
+            }
+        });
+
+        function saveSnapshot() {
+            lastState = preview.innerHTML;
+        }
+
+        function undoAction() {
+            if (!lastState) return alert("Không có gì để hoàn tác!");
+            preview.innerHTML = lastState;
+            localStorage.setItem('cook_html_v17', lastState);
+            lastState = null; 
+            applyLockStatus();
+            alert("Đã Undo!");
+        }
+
         function toggleSecurity() {
             if (!isUnlocked) {
-                let input = prompt("Nhập mật khẩu để chỉnh sửa:");
-                if (input === PASS_CODE) {
+                if (prompt("Mật khẩu:") === PASS_CODE) {
                     isUnlocked = true;
                     applyLockStatus();
-                } else { alert("Sai mật khẩu!"); }
+                } else { alert("Sai!"); }
             } else {
                 isUnlocked = false;
                 applyLockStatus();
                 localStorage.setItem('cook_html_v17', preview.innerHTML);
-                alert("Đã khóa và lưu!");
             }
         }
 
         function applyLockStatus() {
             const btn = document.getElementById('btnToggleLock');
-            const editables = preview.querySelectorAll('[contenteditable]');
             if (isUnlocked) {
                 btn.innerText = "🔒 Khóa & Lưu";
                 btn.classList.add('unlocked-state');
                 preview.classList.add('unlocked');
-                editables.forEach(el => el.contentEditable = "true");
+                preview.querySelectorAll('[contenteditable]').forEach(el => el.contentEditable = "true");
             } else {
                 btn.innerText = "🔓 Mở khóa sửa";
                 btn.classList.remove('unlocked-state');
                 preview.classList.remove('unlocked');
-                editables.forEach(el => el.contentEditable = "false");
+                preview.querySelectorAll('[contenteditable]').forEach(el => el.contentEditable = "false");
             }
         }
 
         function addX2i() {
             const div = document.createElement('div');
             div.className = 'x2i-box';
-            div.innerHTML = `<button onclick="this.parentElement.remove()" style="position:absolute; right:5px; top:5px; background:#ff4444; border:none; color:white; border-radius:50%; width:20px; height:20px; cursor:pointer">✕</button>
+            div.innerHTML = `
+                <button onclick="this.parentElement.remove()" style="position:absolute; right:5px; top:5px; background:#ff4444; border:none; color:white; border-radius:50%; width:20px; height:20px; cursor:pointer">✕</button>
                 <input type="text" class="in-ing" placeholder="Tên...">
-                <div class="flex-group"><input type="text" class="in-amt" placeholder="SL" style="flex:1"><input type="text" class="in-unit" list="unit-suggestions" placeholder="ĐV" style="flex:1"><input type="text" class="in-status" placeholder="Trạng thái" style="flex:1.5"></div>`;
-            x2iList.appendChild(div);
+                <div style="display:flex; gap:5px; margin-top:5px">
+                    <input type="text" class="in-amt" placeholder="SL" style="flex:1">
+                    <input type="text" class="in-unit" list="unit-suggestions" placeholder="ĐV" style="flex:1">
+                    <input type="text" class="in-status" placeholder="Trạng thái" style="flex:1.5">
+                </div>
+            `;
+            document.getElementById('x2i-list').appendChild(div);
         }
 
         function saveRecipe() {
             const name = document.getElementById('recipeName').value.trim();
             if (!name) return alert("Nhập tên món!");
 
+            saveSnapshot();
+
             let tableRows = "";
             document.querySelectorAll('.x2i-box').forEach((item, index) => {
-                tableRows += `<tr><td class="stt">${index+1}</td><td contenteditable="false">${item.querySelector('.in-ing').value || "-"}</td><td contenteditable="false">${item.querySelector('.in-amt').value || "-"}</td><td contenteditable="false">${item.querySelector('.in-unit').value || "-"}</td><td contenteditable="false">${item.querySelector('.in-status').value || "-"}</td></tr>`;
+                tableRows += `<tr><td>${index+1}</td><td>${item.querySelector('.in-ing').value}</td><td>${item.querySelector('.in-amt').value}</td><td>${item.querySelector('.in-unit').value}</td><td>${item.querySelector('.in-status').value}</td></tr>`;
             });
 
-            const entryHtml = `<div class="recipe-entry">
-                <button class="del-recipe-btn" onclick="if(confirm('Xóa món này?')) {this.parentElement.remove(); saveToLocal();}">XÓA MÓN</button>
-                <strong contenteditable="false" style="color:var(--neon-blue); display:block; margin:10px 0;">🥘 MÓN: ${name.toUpperCase()}</strong>
-                <table class="recipe-table"><thead><tr><th style="width:10%">#</th><th style="width:35%">Tên</th><th style="width:15%">SL</th><th style="width:15%">ĐV</th><th style="width:25%">T.Thái</th></tr></thead>
-                <tbody>${tableRows}</tbody></table>
-                <div class="editable-text" contenteditable="false" style="color:var(--neon-pink); font-size:12px;">📝 CHẾ BIẾN:\n${document.getElementById('cookingSteps').value}</div>
-                <div class="editable-text" contenteditable="false" style="color:#aaa; font-size:12px; margin-bottom:10px;">💡 LƯU Ý:\n${document.getElementById('notes').value}</div><hr style="border:0; border-top:1px dashed #333; margin:15px 0;"></div>`;
+            const entryHtml = `
+                <div class="recipe-entry">
+                    <button class="del-recipe-x">✕</button>
+                    <strong style="color:var(--neon-blue); display:block; margin:10px 0;">🥘 MÓN: ${name.toUpperCase()}</strong>
+                    <table class="recipe-table">
+                        <thead><tr><th>#</th><th>Tên</th><th>SL</th><th>ĐV</th><th>T.Thái</th></tr></thead>
+                        <tbody>${tableRows}</tbody>
+                    </table>
+                    <div class="editable-text" style="color:var(--neon-pink); font-size:12px;">📝 CHẾ BIẾN:\n${document.getElementById('cookingSteps').value}</div>
+                    <div class="editable-text" style="color:#aaa; font-size:12px;">💡 LƯU Ý:\n${document.getElementById('notes').value}</div>
+                    <hr style="border:0; border-top:1px dashed #333; margin:15px 0;">
+                </div>`;
 
             preview.insertAdjacentHTML('afterbegin', entryHtml);
-            saveToLocal();
+            localStorage.setItem('cook_html_v17', preview.innerHTML);
             resetForm();
             if(isUnlocked) applyLockStatus();
         }
 
-        // Xử lý Click Chuột phải để Thêm/Xóa hàng
-        preview.addEventListener('contextmenu', function(e) {
-            if (!isUnlocked) return;
-            const cell = e.target.closest('td');
-            if (!cell) return;
-            e.preventDefault();
-
-            const row = cell.parentElement;
-            const tbody = row.parentElement;
-            const action = confirm("Bấm OK để THÊM hàng mới bên dưới\nBấm CANCEL để XÓA hàng này");
-
-            if (action) {
-                const newRow = row.cloneNode(true);
-                newRow.querySelectorAll('td').forEach((td, idx) => { if(idx > 0) td.innerText = "-"; });
-                row.after(newRow);
-            } else {
-                if (tbody.rows.length > 1) row.remove();
-                else alert("Không thể xóa hàng cuối cùng!");
-            }
-            
-            // Đánh lại số thứ tự
-            Array.from(tbody.rows).forEach((r, i) => { r.cells[0].innerText = i + 1; });
-            saveToLocal();
-        });
-
-        function saveToLocal() { localStorage.setItem('cook_html_v17', preview.innerHTML); }
-        
         function resetForm() {
-            document.getElementById('recipeName').value = ''; x2iList.innerHTML = ''; addX2i();
-            document.getElementById('cookingSteps').value = "1. "; document.getElementById('notes').value = "1. ";
+            document.getElementById('recipeName').value = '';
+            document.getElementById('x2i-list').innerHTML = '';
+            addX2i();
+            document.getElementById('cookingSteps').value = "1. ";
+            document.getElementById('notes').value = "1. ";
         }
 
         function exportTxt() {
-            let txt = "SỔ TAY NẤU ĂN\n\n" + preview.innerText.replace(/XÓA MÓN/g, '');
+            let txt = "SỔ TAY NẤU ĂN\n\n" + preview.innerText.replace(/✕/g, '');
             const blob = new Blob(["\ufeff", txt], { type: 'text/plain;charset=utf-8' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = `Recipes.txt`; a.click();
         }
-
-        preview.addEventListener('input', saveToLocal);
     </script>
 </body>
 </html>
